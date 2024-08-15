@@ -22,7 +22,7 @@ class Producto(models.Model):
     precio_base = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
 
     def calcular_precio_base(self):
-        self.precio_base = sum(item.precio for item in self.items.filter(tipo='base'))  # Usar 'items' como related_name
+        self.precio_base = sum(item.precio for item in self.items.filter(tipo='base'))  
     
     def save(self, *args, **kwargs):
         if self.pk:  # Si el producto ya tiene un ID
@@ -39,7 +39,7 @@ class Item(models.Model):
     imagen = models.ImageField(upload_to='items/', null=True, blank=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     tipo = models.CharField(max_length=50, choices=opc_producto)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="items", default=1)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="items")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Guarda el ítem primero
@@ -71,13 +71,14 @@ class Pago(models.Model):
         return f"{self.metodo}, {self.estado}"
 
 class Pedido(models.Model):
-    opc_estado = [("enviado", "Enviado"),("pendiente", "Pendiente"),("entregado", "Entregado"),("carrito", "Carrito")]
+    opc_estado = [("carrito", "Carrito"),("enviado", "Enviado"),("entregado", "Entregado")]
     
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="clientes", null=True, blank=True)
+    estado = models.CharField(max_length=15, choices=opc_estado, default="carrito")
     fecha = models.DateTimeField(auto_now_add=True)
-    estado = models.CharField(max_length=50, choices=opc_estado, default="pendiente")
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="clientes", null=True, blank=True)
     pago = models.ForeignKey(Pago, on_delete=models.CASCADE, related_name="pagos", null=True, blank=True)
-
+    
+    # TODO: Verificar si la funcion calcular total se va a emplear aqui???????????????????????????????????
     def calcular_total(self):
         return sum([detalle.total for detalle in self.detalles.all()])
 
@@ -85,20 +86,43 @@ class Pedido(models.Model):
         #return f"{self.id}, Total: {self.calcular_total()}"
         return f"{self.id}, Total: {self.cliente}"
 
-class PedidoDetalle(models.Model):
-    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name="pedidos")
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="detalles")
-    destinatario = models.ForeignKey(Destinatario, on_delete=models.CASCADE, related_name="destinatarios", null=True, blank=True)
-    cantidad = models.IntegerField(default=1)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+class Detalle(models.Model):
+    nombre = models.CharField(max_length=50)
+    imagen = models.ImageField(upload_to='productos/', null=True, blank=True) # Quitar para que se suba el archivo // llamar a la imagen directa del producto
+    categoria = models.CharField(max_length=100)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
+    
+    def calcular_precio(self):
+        self.precio = sum(personalizacion.total for personalizacion in self.personalizaciones.filter(tipo='base'))  
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # Si el producto ya tiene un ID
+            self.calcular_precio()  # Calcula el precio base
+        super().save(*args, **kwargs)  # Guarda el producto con el precio base actualizado
+    
+    def __str__(self) -> str:
+        return f"{self.nombre}"
+
+class Personalizacion(models.Model):
+    opc_detalle = [("base", "Producto Base"), ("extra", "Personalización")]
+
+    nombre = models.CharField(max_length=50)
+    imagen = models.ImageField(upload_to='items/', null=True, blank=True)  # Quitar para que se suba el archivo // llamar a la imagen directa del producto
+    precio_individual = models.DecimalField(max_digits=10, decimal_places=2)
+    cantidad = models.IntegerField(default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    tipo = models.CharField(max_length=50, choices=opc_detalle)
+    detalle = models.ForeignKey(Detalle, on_delete=models.CASCADE, related_name="personalizaciones")
 
     def calcular_total(self):
-        return self.cantidad * self.producto.precio_base
-
+        self.total = self.precio_individual * self.cantidad 
+    
     def save(self, *args, **kwargs):
-        # Antes de guardar, calcula y asigna el total
-        self.total = self.calcular_total()
-        super().save(*args, **kwargs)
+        self.calcular_total()    # calcula total antes de guardar
+        super().save(*args, **kwargs)  # Guarda
+        
+        self.detalle.calcular_precio()  # Vuelve a calcular el precio del detalle
+        self.detalle.save(update_fields=['precio']) # Actualiza el precio del detalle al que pertenece este ítem
 
     def __str__(self) -> str:
-        return f"{self.pedido.id}, Producto: {self.producto.nombre}, Total: {self.total}"
+        return f"{self.nombre}, {self.tipo}"
