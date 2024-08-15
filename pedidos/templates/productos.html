@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Productos</title>
+
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <title>Lista de Productos</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        table {
+            background-color: #fff;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        thead th {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fff;
+        }
+
+        tbody td {
+            vertical-align: middle;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #871f23;
+            padding: 20px;
+            color: #f8f9fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar a {
+            color: #f8f9fa;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilos para el contenido principal */
+        main {
+            margin-left: 270px;
+            /* Deja espacio para la barra lateral */
+            padding: 20px;
+        }
+
+        /* Estilo para las listas dentro del contenido principal */
+        main ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        main ul li {
+            margin-bottom: 10px;
+        }
+
+        .producto {
+            padding: 20px;
+        }
+
+        .producto-titulo {
+            font-size: 80px;
+            color: #ec9813;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .producto ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            /* Espacio entre productos */
+        }
+
+        .producto-item {
+            width: 400px;
+            padding: 10px;
+            /* Ajusta el tamaño del cuadrado según sea necesario */
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            background-color: #f9d8c7;
+        }
+
+        .producto-imagen img {
+            width: 100%;
+            height: 150px;
+            /* Ajusta la altura según sea necesario */
+            object-fit: cover;
+            /* Asegura que la imagen cubra el área sin deformarse */
+        }
+
+        .producto-datos {
+            padding: 10px;
+        }
+
+        .producto-datos strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .producto-opciones {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .producto-opciones button {
+            background-color: #ec9813;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .producto-opciones button:hover {
+            background-color: #871f23;
+            transform: scale(1.05);
+        }
+
+        .producto-opciones button:focus {
+            outline: none;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+
+        #filtro {
+            margin-bottom: 10px;
+            padding: 15px 0px 0px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .boton-categoria {
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .filtro-categoria:hover {
+            background-color: #ec9813;
+            color: #333;
+        }
+
+        .filtro-categoria:active {
+            background-color: #ec9813;
+            color: #fff;
+            border-color: none;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Barra de Navegación Vertical -->
+    <div class="sidebar">
+        <h2>Cuenta de usuario</h2>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="">
+                    <i class="fas fa-user"></i> Cuenta
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="">
+                    <i class="fas fa-box"></i> Productos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="">
+                    <i class="fas fa-file-alt"></i> Borrador
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+    <main class="mr-4">
+
+        <div class="producto">
+            <h1 class="producto-titulo">Productos Disponibles</h1>
+
+            <!-- Filtro de Categorías con JavaScript -->
+            <div id="filtro">
+                <button class="boton-categoria" data-categoria="">Todas las categorías</button>
+                {% for cat in categorias %}
+                <button class="boton-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
+                {% endfor %}
+            </div>
+
+            <!-- Lista de Productos -->
+            <ul id="lista-productos">
+                {% for producto in productos %}
+                <li class="producto-item">
+                    <div class="producto-imagen">
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                    </div>
+
+                    <div class="producto-datos">
+                        <strong>{{ producto.nombre }}</strong><br>
+                        Descripción: {{ producto.descripcion }}<br>
+                        Precio base: {{ producto.precio_base }}<br>
+                        Categoría: {{ producto.categoria }}
+                    </div>
+
+                    <div class="producto-opciones">
+                        <a class="button">Personalizar</a>
+                        <a class="button" href="/anadir_producto_pedido/?producto_id={{producto.id}}&cantidad=1">Añadir al carrito</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- script del Filtro de productos  -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const buttons = document.querySelectorAll('.boton-categoria');
+
+                buttons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const categoria = button.getAttribute('data-categoria');
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('categoria', categoria);
+                        window.location.href = url.toString();
+                    });
+                });
+            });
+        </script>
+
+    </main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Informacion del producto</title>
+
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <title>Info Producto</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #871f23;
+            padding: 20px;
+            color: #f8f9fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar a {
+            color: #f8f9fa;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilos para el contenido principal */
+        main {
+            margin-left: 270px;
+            /* Deja espacio para la barra lateral */
+            padding: 20px;
+        }
+
+        /* Estilo para las listas dentro del contenido principal */
+        main ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        main ul li {
+            margin-bottom: 10px;
+        }
+
+        .info-producto {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-producto h1 {
+            font-size: 36px;
+            color: #ec9813;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .producto-contenido {
+            display: flex;
+            gap: 20px;
+        }
+
+        .info-producto .img {
+            flex: 1;
+            background-color: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .info-producto .img img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .info-producto .info {
+            flex: 2;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-producto .info table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        .info-producto .info table td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .info-producto .info table td:first-child {
+            font-weight: bold;
+        }
+
+        .info-producto .info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-producto .info ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .info-producto .info ul li:last-child {
+            border-bottom: none;
+        }
+
+        /* Estilos para los botones */
+        .botones {
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-personalizar {
+            background-color: #ec9813;
+            color: white;
+        }
+
+        .btn-personalizar:hover {
+            background-color: #871f23;
+        }
+
+        .btn-comprar {
+            background-color: #ec9813;
+            color: white;
+        }
+
+        .btn-comprar:hover {
+            background-color: #871f23;
+        }
+
+        /* Estilos para el formulario de personalización */
+        .form-personalizacion {
+            margin-top: 20px;
+        }
+
+        .form-personalizacion form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-personalizacion label {
+            margin-bottom: 5px;
+        }
+
+        .form-personalizacion input,
+        .form-personalizacion textarea {
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Barra de Navegación Vertical -->
+    <div class="sidebar">
+        <h2>Cuenta de usuario</h2>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="">
+                    <i class="fas fa-user"></i> Información del Cliente
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="">
+                    <i class="fas fa-box"></i> Productos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="">
+                    <i class="fas fa-file-alt"></i> Borrador
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+    <main class="mr-4">
+
+        <!-- Info productos  -->
+        <div class="info-producto">
+            <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
+
+            <div class="producto-contenido">
+                <!-- Imagen -->
+                <div class="img">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                </div>
+
+                <!-- Detalles -->
+                <div class="info">
+                    <table>
+                        <tr>
+                            <td><strong>Descripción:</strong></td>
+                            <td>{{ producto.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Precio base:</strong></td>
+                            <td>{{ producto.precio_base }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Categoría:</strong></td>
+                            <td>{{ producto.categoria }}</td>
+                        </tr>
+                    </table>
+
+                    <h2>Personalizaciones</h2>
+                    <ul>
+                        {% for item in personalizaciones %}
+                        <li>
+                            <strong>{{ item.personalizacion.tipo }}:</strong>
+                            {{ item.personalizacion.descripcion }}
+                            <strong> Precio adicional:</strong>
+                            {{ item.personalizacion.precio_adicional }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="botones">
+                        <button id="btn-personalizar" class="btn btn-personalizar">Personalizar</button>
+                        <button id="btn-comprar" class="btn btn-comprar">Comprar</button>
+                    </div>
+
+                    <!-- Formulario de personalización -->
+                    <div id="form-personalizacion" class="form-personalizacion" style="display: none;">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <!-- Aquí puedes agregar los campos necesarios para la personalización -->
+                            <label for="tipo">Tipo:</label>
+                            <input type="text" id="tipo" name="tipo" required><br>
+                            <label for="descripcion">Descripción:</label>
+                            <textarea id="descripcion" name="descripcion" required></textarea><br>
+                            <label for="precio_adicional">Precio adicional:</label>
+                            <input type="number" id="precio_adicional" name="precio_adicional" step="0.01" required><br>
+                            <input type="submit" value="Guardar Personalización">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <script>
+        document.getElementById('btn-personalizar').addEventListener('click', function () {
+            var form = document.getElementById('form-personalizacion');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>
