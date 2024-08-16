@@ -3,23 +3,43 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Cliente, Producto, Pedido
-from .forms import ClienteForm
+from .models import Cliente, Producto, Pedido, Detalle
+from .forms import ClienteForm, DetalleForm
 
-# @login_required
-def ver_pedidos(request, cliente_id):
-    cliente = get_object_or_404(Cliente, id=cliente_id)
-    # if cliente != request.user.cliente and not request.user.is_superuser:
-    #     return HttpResponse("No tienes acceso a esta cuenta")
+# def menu(request, cliente_id):
+#     cliente = get_object_or_404(Cliente, id=cliente_id)
+#     if cliente != request.user.cliente and not request.user.is_superuser:
+#         return HttpResponse("No tienes acceso a esta cuenta")
     
-    pedidos = Pedido.objects.filter(cliente=cliente)
-    contenido = {
-        'cliente': cliente,
-        'pedidos': pedidos
-    }
-    return render(request, 'pedidos.html', contenido)
+#     contenido = {
+#         'cliente': cliente,
+#     }
+#     return render(request, 'menu.html', contenido)
 
-def ver_productos(request):
+def menu(request, cliente_id=None):
+    contenido = {}
+
+    if request.user.is_authenticated:
+        if cliente_id:
+            cliente = get_object_or_404(Cliente, id=cliente_id)
+            if cliente != request.user.cliente and not request.user.is_superuser:
+                return HttpResponse("No tienes acceso a esta cuenta")
+            contenido['cliente'] = cliente
+        else:
+            # No se envía un cliente_id, pero el usuario está autenticado
+            try:
+                cliente = request.user.cliente
+                contenido['cliente'] = cliente
+            except Cliente.DoesNotExist:
+                # El usuario no tiene un cliente asociado
+                contenido['mensaje'] = "No tienes un cliente asociado"
+    else:
+        # Usuario no autenticado
+        contenido['mensaje'] = "Bienvenido a Detalles Cariño"
+    
+    return render(request, 'menu.html', contenido)
+
+def main(request):
     categoria = request.GET.get('categoria', '')
     
     if categoria:
@@ -31,11 +51,56 @@ def ver_productos(request):
     
     contenido = {
         'productos': productos,
-        'categorias': categorias
+        'categorias': categorias,
     }
-    return render(request, 'productos.html', contenido)
+    return render(request, 'main.html', contenido)
 
-def ver_info_producto(request, producto_id):
+@login_required #Se puede validar que dependiendo el tipo de usuario se vea una cosa u otra
+def pedidos(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    if cliente != request.user.cliente and not request.user.is_superuser:
+        return HttpResponse("No tienes acceso a esta cuenta")
+    
+    pedidos = Pedido.objects.filter(cliente=cliente)
+    contenido = {
+        'cliente': cliente,
+        'pedidos': pedidos
+    }
+    return render(request, 'pedidos.html', contenido)
+
+#@login_required #Se puede validar que dependiendo el tipo de usuario se vea una cosa u otra
+def info_cliente(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    # if cliente != request.user.cliente and not request.user.is_superuser:
+    #     return HttpResponse("No tienes acceso a esta cuenta")
+    
+    pedidos = Pedido.objects.filter(cliente=cliente)
+    contenido = {
+        'cliente': cliente,
+        'pedidos': pedidos
+    }
+    return render(request, 'info_cliente.html', contenido)
+
+def main(request):
+    # TODO: hay que ajsutar el menu para que no cargue los datos del usuario siempre
+    user = request.user     
+    categoria = request.GET.get('categoria', '')
+    
+    if categoria:
+        productos = Producto.objects.filter(categoria=categoria)
+    else:
+        productos = Producto.objects.all()
+        
+    categorias = Producto.objects.values_list('categoria', flat=True).distinct()
+    
+    contenido = {
+        'productos': productos,
+        'categorias': categorias,
+        'user': user
+    }
+    return render(request, 'main.html', contenido)
+
+def info_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     personalizaciones = producto.items.filter(tipo='extra')
     
@@ -44,13 +109,6 @@ def ver_info_producto(request, producto_id):
         'personalizaciones': personalizaciones
     }
     return render(request, 'info_productos.html', contenido)
-
-def ver_borrador(request, cliente_id):
-    cliente = get_object_or_404(Cliente, id=cliente_id)
-    contenido = {
-        'cliente': cliente,
-    }
-    return render(request, 'borrador.html', contenido)
 
 def nuevo_cliente(request):
     mensaje_error = ""
@@ -63,7 +121,6 @@ def nuevo_cliente(request):
             # Crear un nuevo cliente con los datos del formulario
             cliente = Cliente.objects.create(
                 nombre=formulario.cleaned_data['nombre'],
-                contrasenia=formulario.cleaned_data['contrasenia'],
                 cedula=formulario.cleaned_data['cedula'],
                 email=formulario.cleaned_data['email'],
                 telefono=formulario.cleaned_data['telefono'],
@@ -72,7 +129,7 @@ def nuevo_cliente(request):
             )
             cliente.save()
             # TODO: redirigir a una pagina del cliente nuevo.
-            return HttpResponseRedirect(reverse("ver_borrador", args=[cliente.id]))
+            return HttpResponseRedirect(reverse("menu", args=[cliente.id]))
         else:
             # TODO: Mostrar un mensaje de error, mantenerse en el formulario.
             mensaje_error = "Error en el formulario"
@@ -82,6 +139,22 @@ def nuevo_cliente(request):
     # Renderizar el formulario
     return render(request, 'nuevo_cliente.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
+def nueva_personalizacion(request):
+    mensaje_error = ""
+    if request.method == "POST":
+        formulario = DetalleForm(request.POST, request.FILES)
+        if formulario.is_valid():
+            personalizacion = Detalle.objects.create(
+            # agregar datos de la tabla DETALLE
+            )
+            personalizacion.save()  
+            return HttpResponseRedirect(reverse("nombre_de_la_vista_donde_redirigir"))
+        else:
+            mensaje_error = "Error en el formulario. Por favor, revisa los datos ingresados."
+    else:
+        formulario = DetalleForm()
+    
+    return render(request, 'nueva_personalizacion.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
 # def anadir_producto_pedido(request):
 #     producto_id = request.GET.get('producto_id', '')

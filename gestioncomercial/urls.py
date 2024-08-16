@@ -1,22 +1,33 @@
 from django.contrib import admin
 from django.urls import path, include
-from pedidos.views import ver_pedidos, ver_productos, ver_info_producto, ver_borrador, nuevo_cliente
+from pedidos.views import pedidos, main, info_producto, info_cliente, menu, nuevo_cliente
 from django.conf import settings
 from django.conf.urls.static import static
- 
 
 urlpatterns = [
-    # path('accounts/', include('allauth.urls')),
-    path('admin/', admin.site.urls),
-    path('pedidos/<int:cliente_id>', ver_pedidos, name='ver_pedidos_cliente'),
-    
-    path('productos/', ver_productos, name='ver_productos'),
-    path('info-productos/<int:producto_id>', ver_info_producto, name='ver_info_producto'),
-    
-    path('cliente/nuevo', nuevo_cliente, name='nuevo_cliente'),
-    #path('anadir_producto_pedido/', anadir_producto_pedido, name='anadir_producto_pedido'),
+    #Autenticación
+    path('accounts/', include('allauth.urls')),
 
-    path('borrador/<int:cliente_id>', ver_borrador, name='ver_borrador')
+    #Menu
+    path('menu/<int:cliente_id>', menu, name='menu'),
+
+    #Panel Admin Django
+    path('admin/', admin.site.urls),
+
+    #Home
+    path('', main, name='main'),
+
+    #Productos
+    path('productos/<int:producto_id>', info_producto, name='info_producto'),                   #Visualizar
+
+    #Clientes
+    path('cliente/nuevo', nuevo_cliente, name='nuevo_cliente'),                                 #Agregar
+    path('cliente/info/<int:cliente_id>', info_cliente, name='info_cliente'),                                    #Info
+    path('cliente/pedidos/<int:cliente_id>', pedidos, name='pedidos'),                          #Pedidos
+    
+    #Carrito
+    #path('anadir_producto_pedido/', anadir_producto_pedido, name='anadir_producto_pedido'),    #Agregar
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

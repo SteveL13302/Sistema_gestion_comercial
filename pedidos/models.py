@@ -1,15 +1,14 @@
 from django.db import models
-#from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 
 class Cliente(models.Model):
     nombre = models.CharField(max_length=50)
-    contrasenia = models.CharField(max_length=50)
-    cedula = models.CharField(max_length=10, unique=True)
+    cedula = models.CharField(max_length=10)
     email = models.EmailField()
     telefono = models.CharField(max_length=10)
     ciudad = models.CharField(max_length=30)
     direccion = models.TextField(max_length=200)
-    # user = models.OneToOneField(User, related_name='cliente', on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, related_name='cliente', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.nombre}, {self.cedula}"

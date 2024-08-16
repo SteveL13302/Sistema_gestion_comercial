@@ -1,0 +1,58 @@
+{% extends 'menu.html' %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block content %}
+<main role="main" class="container mt-5">
+    <div class="producto">
+        <h1 class="producto-titulo">Productos Disponibles</h1>
+
+        <!-- Filtro de Categorías con JavaScript -->
+        <div id="filtro">
+            <button class="boton-categoria" data-categoria="">Todas las categorías</button>
+            {% for cat in categorias %}
+            <button class="boton-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
+            {% endfor %}
+        </div>
+
+        <!-- Lista de Productos -->
+        <ul id="lista-productos">
+            {% for producto in productos %}
+            <li class="producto-item">
+                <div class="producto-imagen">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                </div>
+
+                <div class="producto-datos">
+                    <strong>{{ producto.nombre }}</strong><br>
+                    Descripción: {{ producto.descripcion }}<br>
+                    Precio base: {{ producto.precio_base }}<br>
+                    Categoría: {{ producto.categoria }}
+                </div>
+
+                <div class="producto-opciones">
+                    <a class="button">Personalizar</a>
+                    <a class="button" href="/anadir_producto_pedido/?producto_id={{producto.id}}&cantidad=1">Añadir al
+                        carrito</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.boton-categoria');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const categoria = button.getAttribute('data-categoria');
+                const url = new URL(window.location.href);
+                url.searchParams.set('categoria', categoria);
+                window.location.href = url.toString();
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -15,7 +15,6 @@ class ClienteAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'nombre',
-        'contrasenia',
         'cedula',
         'email',
         'telefono',
