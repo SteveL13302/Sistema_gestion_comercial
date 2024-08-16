@@ -67,12 +67,32 @@ WSGI_APPLICATION = 'gestioncomercial.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+# BASE LOCAL
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'pedidos',
+#         'USER': 'root',
+#         'PASSWORD': '31298300',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+
+
+# BASE SERVIDOR
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'stevenxev$pedidos',
+        'USER': 'stevenxev',
+        'PASSWORD': 'sxev3129',
+        'HOST': 'stevenxev.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
     }
 }
+
 
 
 # Password validation
