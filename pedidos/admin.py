@@ -7,6 +7,7 @@ class ItemInline(admin.TabularInline):
 
 class PersonalizacionInline(admin.TabularInline):
     model = Personalizacion
+    readonly_fields = ('total',) 
     extra = 0 
 
 @admin.register(Cliente)
@@ -51,8 +52,8 @@ class PagoAdmin(admin.ModelAdmin):
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'estado', 'fecha', 'cliente', 'pago')
-    list_filter = ('fecha', 'cliente', 'pago')
+    list_display = ('id', 'estado', 'fecha', 'cliente', 'pago', 'destinatario')
+    list_filter = ('fecha', 'cliente', 'pago', 'destinatario',)
 
 @admin.register(Detalle)
 class DetalleAdmin(admin.ModelAdmin):

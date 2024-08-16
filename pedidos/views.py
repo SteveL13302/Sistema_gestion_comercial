@@ -1,72 +1,110 @@
-# from django.shortcuts import render, redirect, get_object_or_404
-# from django.http import HttpResponse
-# from django.contrib.auth.decorators import login_required
-# from .models import Cliente, Producto, Pedido, PedidoDetalle
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
-# #@login_required
-# def ver_pedidos(request, cliente_id):
-#     cliente = get_object_or_404(Cliente, id=cliente_id)
-#     # if cliente != request.user.cliente and not request.user.is_superuser:
-#     #     return HttpResponse("No tienes acceso a esta cuenta")
-#     pedidos = cliente.clientes.all()
-#     contenido = {
-#         'cliente': cliente,
-#         'pedidos': pedidos
-#     }
-#     return render(request, 'pedidos.html', contenido)
+from .models import Cliente, Producto, Pedido
+from .forms import ClienteForm
 
-# def ver_productos(request):
-#     categoria = request.GET.get('categoria', '')
+# @login_required
+def ver_pedidos(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    # if cliente != request.user.cliente and not request.user.is_superuser:
+    #     return HttpResponse("No tienes acceso a esta cuenta")
     
-#     if categoria:
-#         productos = Producto.objects.filter(categoria=categoria)
-#     else:
-#         productos = Producto.objects.all()
+    pedidos = Pedido.objects.filter(cliente=cliente)
+    contenido = {
+        'cliente': cliente,
+        'pedidos': pedidos
+    }
+    return render(request, 'pedidos.html', contenido)
+
+def ver_productos(request):
+    categoria = request.GET.get('categoria', '')
+    
+    if categoria:
+        productos = Producto.objects.filter(categoria=categoria)
+    else:
+        productos = Producto.objects.all()
         
-#     categorias = Producto.objects.values_list('categoria', flat=True).distinct()
+    categorias = Producto.objects.values_list('categoria', flat=True).distinct()
     
-#     contenido = {
-#         'productos': productos,
-#         'categorias': categorias
-#     }
-#     return render(request, 'productos.html', contenido)
+    contenido = {
+        'productos': productos,
+        'categorias': categorias
+    }
+    return render(request, 'productos.html', contenido)
 
-# def ver_info_producto(request, producto_id):
-#     producto = get_object_or_404(Producto, id=producto_id)
-#     personalizaciones = producto.items.filter(tipo='extra')
+def ver_info_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    personalizaciones = producto.items.filter(tipo='extra')
     
-#     contenido = {
-#         'producto': producto,
-#         'personalizaciones': personalizaciones
-#     }
-#     return render(request, 'info_productos.html', contenido)
+    contenido = {
+        'producto': producto,
+        'personalizaciones': personalizaciones
+    }
+    return render(request, 'info_productos.html', contenido)
 
-# def ver_borrador(request):
-#     return render(request, 'borrador.html')
+def ver_borrador(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    contenido = {
+        'cliente': cliente,
+    }
+    return render(request, 'borrador.html', contenido)
+
+def nuevo_cliente(request):
+    mensaje_error = ""
+    # Procesa el formulario para un nuevo cliente
+    if request.method == "POST":
+        # Crear el formulario con los datos del POST
+        formulario = ClienteForm(request.POST)
+        # Validar el formulario
+        if formulario.is_valid():
+            # Crear un nuevo cliente con los datos del formulario
+            cliente = Cliente.objects.create(
+                nombre=formulario.cleaned_data['nombre'],
+                contrasenia=formulario.cleaned_data['contrasenia'],
+                cedula=formulario.cleaned_data['cedula'],
+                email=formulario.cleaned_data['email'],
+                telefono=formulario.cleaned_data['telefono'],
+                ciudad=formulario.cleaned_data['ciudad'],
+                direccion=formulario.cleaned_data['direccion']
+            )
+            cliente.save()
+            # TODO: redirigir a una pagina del cliente nuevo.
+            return HttpResponseRedirect(reverse("ver_borrador", args=[cliente.id]))
+        else:
+            # TODO: Mostrar un mensaje de error, mantenerse en el formulario.
+            mensaje_error = "Error en el formulario"
+    else:
+        # Crear un formulario vacio
+        formulario = ClienteForm()
+    # Renderizar el formulario
+    return render(request, 'nuevo_cliente.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
 
-# # def anadir_producto_pedido(request):
-# #     producto_id = request.GET.get('producto_id', '')
-# #     cantidad = request.GET.get('cantidad', '')
-# #     pedido_id = request.COOKIES.get('pedido_id', None)
-# #     #response = HttpResponse("Cookie Set!")
-# #     contenido = {}
-# #     response = render(request, 'borrador.html', contenido)
+# def anadir_producto_pedido(request):
+#     producto_id = request.GET.get('producto_id', '')
+#     cantidad = request.GET.get('cantidad', '')
+#     pedido_id = request.COOKIES.get('pedido_id', None)
+#     #response = HttpResponse("Cookie Set!")
+#     contenido = {}
+#     response = render(request, 'borrador.html', contenido)
     
-# #     if pedido_id:
-# #         pedido = Pedido.objects.filter(estado_pedido = 'carrito', id = pedido_id).last()
-# #     else:
-# #         pedido = None
+#     if pedido_id:
+#         pedido = Pedido.objects.filter(estado_pedido = 'carrito', id = pedido_id).last()
+#     else:
+#         pedido = None
 
-# #     if pedido == None: 
-# #         pedido = Pedido(estado_pedido = 'borrador')
-# #         pedido.save()
-# #         response.set_cookie('pedido_id', pedido.id)
+#     if pedido == None: 
+#         pedido = Pedido(estado_pedido = 'borrador')
+#         pedido.save()
+#         response.set_cookie('pedido_id', pedido.id)
 
-# #     producto = Producto.objects.get(id = producto_id)
-# #     detalle_pedido = PedidoDetalle(pedido=pedido, producto=producto, cantidad= int(cantidad))
-# #     detalle_pedido.save()
-# #     return response
+#     producto = Producto.objects.get(id = producto_id)
+#     detalle_pedido = PedidoDetalle(pedido=pedido, producto=producto, cantidad= int(cantidad))
+#     detalle_pedido.save()
+#     return response
 
-# # def enviar_correo(request):
-# #     send_mail("asunto", "mensaje", "correo@gmail.com", ["destinatario", fail_silently=False])
+# def enviar_correo(request):
+#     send_mail("asunto", "mensaje", "correo@gmail.com", ["destinatario", fail_silently=False])
