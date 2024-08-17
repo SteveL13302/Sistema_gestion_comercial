@@ -40,6 +40,7 @@ def menu(request, cliente_id=None):
     return render(request, 'menu.html', contenido)
 
 def main(request):
+    
     categoria = request.GET.get('categoria', '')
     
     if categoria:

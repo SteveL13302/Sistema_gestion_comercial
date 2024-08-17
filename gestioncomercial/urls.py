@@ -3,11 +3,12 @@ from django.urls import path, include
 from pedidos.views import pedidos, main, info_producto, info_cliente, menu, nuevo_cliente
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     #Autenticación
     path('accounts/', include('allauth.urls')),
-
+         
     #Menu
     path('menu/<int:cliente_id>', menu, name='menu'),
 
@@ -22,7 +23,7 @@ urlpatterns = [
 
     #Clientes
     path('cliente/nuevo', nuevo_cliente, name='nuevo_cliente'),                                 #Agregar
-    path('cliente/info/<int:cliente_id>', info_cliente, name='info_cliente'),                                    #Info
+    path('cliente/info/<int:cliente_id>', info_cliente, name='info_cliente'),                   #Info
     path('cliente/pedidos/<int:cliente_id>', pedidos, name='pedidos'),                          #Pedidos
     
     #Carrito
