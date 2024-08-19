@@ -55,7 +55,7 @@ class Item(models.Model):
 class Destinatario(models.Model):
     nombre = models.CharField(max_length=50)
     telefono = models.CharField(max_length=10)
-    ciudad = models.CharField(max_length=10)
+    ciudad = models.CharField(max_length=30)
     direccion = models.TextField(max_length=200)
 
     def __str__(self) -> str:
@@ -67,10 +67,10 @@ class Pago(models.Model):
 
     metodo = models.CharField(max_length=50, choices=OPC_METODO)
     estado = models.CharField(max_length=50, choices=OPC_ESTADO_PAGO, default="pendiente")
-    comprobante = models.ImageField(upload_to='comprobantes/')
+    comprobante = models.ImageField(upload_to='comprobantes/', default='comprobantes/comprobante-default.jpg',  null=True, blank=True)       #Cambiar que se puede enviar vacio
 
     def __str__(self) -> str:
-        return f"{self.metodo}, {self.estado}"
+        return f"{self.estado}"
 
 class Pedido(models.Model):
     OPC_ESTADO_PEDIDO = [("carrito", "Carrito"),("enviado", "Enviado"),("entregado", "Entregado")]

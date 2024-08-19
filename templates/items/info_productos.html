@@ -4,22 +4,6 @@
 
 {% block content %}
 
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
-    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  
-    <link rel="stylesheet" href="./../../static/sweetalert2/sweetalert2.min.css">
-    <script src="./../../static/sweetalert2/sweetalert2.min.js"></script>
-  
-    {% load static %}
-    <link href="{% static 'css/main.css' %}" rel="stylesheet">
-  
-  </head>
-
 <main class="mr-4">
 
     <!-- Info productos  -->
@@ -49,17 +33,16 @@
                     </tr>
                 </table>
 
-                <h2>Personalizaciones</h2>
-                <ul>
-                    {% for item in personalizaciones %}
-                    <li>
-                        <strong>{{ item.personalizacion.tipo }}:</strong>
-                        {{ item.personalizacion.descripcion }}
-                        <strong> Precio adicional:</strong>
-                        {{ item.personalizacion.precio_adicional }}
-                    </li>
+                <h5>Incluye:</h5>
+                <table>
+                    {% for personalizacion in personalizaciones %}
+                    <tr>
+                        <td>
+                            <i class="fas fa-check"></i> {{ personalizacion.nombre }}
+                        </td>
+                    </tr>
                     {% endfor %}
-                </ul>
+                </table>
 
                 <div class="botones">
                     <button id="btn-personalizar" class="btn btn-personalizar">Personalizar</button>
