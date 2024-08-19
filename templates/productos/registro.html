@@ -1,0 +1,37 @@
+{% extends 'menu.html' %}
+
+{% block title %}Nuevo Producto{% endblock %}
+
+{% block content %}
+<main role="main" class="container">
+  <div class="frm_nuevocliente">
+    <h1>Nuevo Producto</h1>
+    <hr>
+
+    <form method="post" action="{% url 'nuevo_producto' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ formulario }}
+      <input type="submit" value="Guardar" class="btn btn-primary">
+    </form>
+
+    {% if mensaje_error %}
+      <div class="alert alert-danger mt-3">
+        {{ mensaje_error }}
+      </div>
+    {% endif %}
+
+    {% if form.errors %}
+    <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

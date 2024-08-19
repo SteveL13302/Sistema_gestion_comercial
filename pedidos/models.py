@@ -10,13 +10,16 @@ class Cliente(models.Model):
     direccion = models.TextField(max_length=200)
     user = models.OneToOneField(User, related_name='cliente', on_delete=models.CASCADE, null=True, blank=True)
 
+    class Meta:
+        db_table = 'cliente' 
+    
     def __str__(self) -> str:
         return f"{self.nombre}, {self.cedula}"
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=50)
     descripcion = models.TextField(max_length=200)
-    imagen = models.ImageField(upload_to='productos/')
+    imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
     categoria = models.CharField(max_length=100)
     precio_base = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
 

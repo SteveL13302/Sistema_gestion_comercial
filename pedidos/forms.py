@@ -13,7 +13,8 @@ class ClienteForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 0987654321'}),
             'ciudad': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Santo Domingo'}),
             'direccion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Calle Principal, Calle Secundaria, Referencia'}),
-            'user': forms.Select(attrs={'class': 'form-control'}),
+            # 'user': forms.Select(attrs={'class': 'form-control'}),
+            'user': forms.HiddenInput(),
         }
 
 class ProductoForm(forms.ModelForm):
@@ -31,13 +32,15 @@ class ProductoForm(forms.ModelForm):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['nombre', 'imagen', 'precio', 'tipo', 'producto']
+        # fields = ['nombre', 'imagen', 'precio', 'tipo', 'producto']
+        fields = ['nombre', 'imagen', 'precio', 'tipo']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Nombre del ítem'}),
             'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'precio': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 0.00'}),    #Gestionar para que calcule en base al modelo
             'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'producto': forms.Select(attrs={'class': 'form-control'}),
+            # 'producto': forms.Select(attrs={'class': 'form-control'}),
+            # 'producto': forms.HiddenInput(),
         }
 
 class DestinatarioForm(forms.ModelForm):

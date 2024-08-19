@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from pedidos.views import pedidos, main, info_producto, info_cliente, menu, nuevo_cliente
+from pedidos.views import pedidos, main, info_cliente, menu, nuevo_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, info_producto, nuevo_item, eliminar_item
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -18,7 +18,17 @@ urlpatterns = [
     path('', main, name='main'),
 
     #Productos
-    path('productos/<int:producto_id>', info_producto, name='info_producto'),                   #Visualizar
+    path('productos/registrar', nuevo_producto, name='nuevo_producto'),                          #Registrar
+    path('productos', productos, name='productos'),                          #Consultar
+    path('productos/eliminar/<int:producto_id>', eliminar_producto, name='eliminar_producto'),                          #Consultar
+    path('productos/editar/<int:producto_id>', detalle_producto, name='detalle_producto'),                   #Visualizar
+    path('productos/editar/guardar/<int:producto_id>', editar_producto, name='editar_producto'),                   #Visualizar
+
+    
+    #Items
+    path('items/<int:producto_id>', info_producto, name='info_producto'),                   #Visualizar
+    path('items/registrar/<int:producto_id>', nuevo_item, name='nuevo_item'),                   #Registrar
+    path('items/eliminar/<int:item_id>/<int:producto_id>', eliminar_item, name='eliminar_item'),                   #Eliminar
 
     #Clientes
     path('cliente/nuevo', nuevo_cliente, name='nuevo_cliente'),                                 #Agregar

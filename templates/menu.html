@@ -10,6 +10,9 @@
   <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="./static/sweetalert2/sweetalert2.min.css">
+  <script src="./static/sweetalert2/sweetalert2.min.js"></script>
+
   {% load static %}
   <link href="{% static 'css/main.css' %}" rel="stylesheet">
 
@@ -26,6 +29,11 @@
       {{ mensaje }}
       {% endif %}
     </h2>
+
+    {% if request.session.user_id %}
+      <p>Tu ID de usuario es {{ request.session.user_id }}</p>
+    {% endif %}
+
     <ul class="nav flex-column">
 
       <!-- Información del cliente al registrarse -->

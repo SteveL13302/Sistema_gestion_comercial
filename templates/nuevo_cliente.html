@@ -1,24 +1,24 @@
 {% extends 'menu.html' %}
 
-{% block title %}Detalles Cariño: {{producto.nonmbre}} {% endblock %}
+{% block title %}Nuevo Cliente{% endblock %}
 
 {% block content %}
-
-<h1>{{mensaje_error}}</h1>
 <main role="main" class="container">
-
   <div class="frm_nuevocliente">
-    
     <h1>Nuevo Cliente</h1>
     <hr>
 
-    <form method="post">
+    <form method="post" action="{% url 'nuevo_cliente' %}">
       {% csrf_token %}
-      {{ formulario }}
-      <input type="submit" value="Guardar">
+      {{ formulario.as_p }}
+      <input type="submit" value="Guardar" class="btn btn-primary">
     </form>
+
+    {% if mensaje_error %}
+      <div class="alert alert-danger mt-3">
+        {{ mensaje_error }}
+      </div>
+    {% endif %}
   </div>
-
 </main>
-
 {% endblock %}

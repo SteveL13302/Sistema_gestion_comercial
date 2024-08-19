@@ -41,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+    'pedidos.middleware.SaveUserIdMiddleware'
 ]
 
 ROOT_URLCONF = 'gestioncomercial.urls'

@@ -3,8 +3,8 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Cliente, Producto, Pedido, Detalle
-from .forms import ClienteForm, DetalleForm
+from .models import Cliente, Producto, Pedido, Detalle, Item
+from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm
 
 # def menu(request, cliente_id):
 #     cliente = get_object_or_404(Cliente, id=cliente_id)
@@ -101,45 +101,160 @@ def main(request):
     }
     return render(request, 'main.html', contenido)
 
+def productos(request):
+    productos = Producto.objects.all()
+    contenido = {
+        'productos': productos 
+    }
+    return render(request, 'productos/listado.html', contenido)
+
+def nuevo_producto(request):
+    mensaje_error = ""
+    
+    if request.method == "POST":
+        formulario = ProductoForm(request.POST)
+        if formulario.is_valid():
+            producto = formulario.save(commit=False)
+            producto.imagen = 'productos/Screenshot_2.png' 
+            producto.save()
+            return redirect('/')
+        else:
+            mensaje_error = formulario.errors.as_text()
+    else:
+        formulario = ProductoForm()
+    
+    return render(request, 'productos/registro.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
+
+def eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    
+    if request.method == 'POST':
+        producto.delete()  # Elimina el producto
+        return redirect('productos') 
+
+    # Si no es una solicitud POST, puedes redirigir o mostrar un error
+    return HttpResponse("Método no permitido", status=405)
+
+def detalle_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    formulario = ProductoForm(instance=producto)  # Cargar el formulario con los datos del producto
+    
+    return render(request, 'productos/editar.html', {'formulario': formulario, 'producto': producto})
+
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES, instance=producto)
+        if form.is_valid():
+            form.save()
+            return redirect('productos')  # Redirige a la lista de productos después de guardar
+    else:
+        form = ProductoForm(instance=producto)
+    
+    return render(request, 'productos/editar.html', {'formulario': form})
+
 def info_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     personalizaciones = producto.items.filter(tipo='extra')
-    
+    items = Item.objects.filter(producto=producto)
+
+    # Simplemente creamos una instancia del formulario, pero no lo procesamos aquí
+    form = ItemForm()
+
     contenido = {
         'producto': producto,
-        'personalizaciones': personalizaciones
+        'personalizaciones': personalizaciones,
+        'formulario': form,
+        'items': items 
     }
-    return render(request, 'info_productos.html', contenido)
+    return render(request, 'items/info_productos.html', contenido)
+
+def items(request, producto_id):
+    items = Item.objects.all()
+    contenido = {
+        'productos': items 
+    }
+    return render(request, 'productos/listado.html', contenido)
+
+def nuevo_item(request, producto_id):
+    mensaje_error = ""
+
+    # Obtén el producto usando el ID proporcionado
+    producto = get_object_or_404(Producto, id=producto_id)
+    
+    if request.method == "POST":
+        formulario = ItemForm(request.POST, request.FILES)
+        if formulario.is_valid():
+            item = formulario.save(commit=False)
+            item.imagen = 'productos/Screenshot_2.png'  # Modifica si es necesario
+            item.producto = producto  # Asocia el producto con el item
+            item.save()
+            return HttpResponseRedirect(reverse('info_producto', args=[producto_id]))
+        else:
+            mensaje_error = formulario.errors.as_text()
+    else:
+        # Pasa el producto al formulario para asegurarte de que esté presente
+        formulario = ItemForm(initial={'producto': producto})
+    
+    return render(request, 'productos/listado.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
+
+def eliminar_item(request, item_id, producto_id):
+    item = get_object_or_404(Item, id=item_id)
+    
+    if request.method == 'POST':
+        item.delete()  # Elimina el producto
+        return HttpResponseRedirect(reverse('info_producto', args=[producto_id]))
+
+    # Si no es una solicitud POST, puedes redirigir o mostrar un error
+    return HttpResponse("Método no permitido", status=405)
+
+# def nuevo_cliente(request):
+#     mensaje_error = ""
+#     # Procesa el formulario para un nuevo cliente
+#     if request.method == "POST":
+#         # Crear el formulario con los datos del POST
+#         formulario = ClienteForm(request.POST)
+#         # Validar el formulario
+#         if formulario.is_valid():
+#             # Crear un nuevo cliente con los datos del formulario
+#             cliente = Cliente.objects.create(
+#                 nombre=formulario.cleaned_data['nombre'],
+#                 cedula=formulario.cleaned_data['cedula'],
+#                 email=formulario.cleaned_data['email'],
+#                 telefono=formulario.cleaned_data['telefono'],
+#                 ciudad=formulario.cleaned_data['ciudad'],
+#                 direccion=formulario.cleaned_data['direccion']
+#             )
+#             cliente.save()
+#             # TODO: redirigir a una pagina del cliente nuevo.
+#             return HttpResponseRedirect(reverse("menu", args=[cliente.id]))
+#         else:
+#             # TODO: Mostrar un mensaje de error, mantenerse en el formulario.
+#             mensaje_error = "Error en el formulario"
+#     else:
+#         # Crear un formulario vacio
+#         formulario = ClienteForm()
+#     # Renderizar el formulario
+#     return render(request, 'nuevo_cliente.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
 def nuevo_cliente(request):
     mensaje_error = ""
-    # Procesa el formulario para un nuevo cliente
+    
     if request.method == "POST":
-        # Crear el formulario con los datos del POST
         formulario = ClienteForm(request.POST)
-        # Validar el formulario
         if formulario.is_valid():
-            # Crear un nuevo cliente con los datos del formulario
-            cliente = Cliente.objects.create(
-                nombre=formulario.cleaned_data['nombre'],
-                cedula=formulario.cleaned_data['cedula'],
-                email=formulario.cleaned_data['email'],
-                telefono=formulario.cleaned_data['telefono'],
-                ciudad=formulario.cleaned_data['ciudad'],
-                direccion=formulario.cleaned_data['direccion']
-            )
+            cliente = formulario.save(commit=False)
+            cliente.user_id = request.user.id 
             cliente.save()
-            # TODO: redirigir a una pagina del cliente nuevo.
-            return HttpResponseRedirect(reverse("menu", args=[cliente.id]))
+            return redirect('menu', cliente_id=cliente.id)
         else:
-            # TODO: Mostrar un mensaje de error, mantenerse en el formulario.
-            mensaje_error = "Error en el formulario"
+            mensaje_error = formulario.errors.as_text()
     else:
-        # Crear un formulario vacio
         formulario = ClienteForm()
-    # Renderizar el formulario
+    
     return render(request, 'nuevo_cliente.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
-
+    
 def nueva_personalizacion(request):
     mensaje_error = ""
     if request.method == "POST":
