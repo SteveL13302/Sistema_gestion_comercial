@@ -9,7 +9,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
          
     #Menu
-    path('menu/<int:cliente_id>', menu, name='menu'),
+    path('menu/', menu, name='menu'),
 
     #Panel Admin Django
     path('admin/', admin.site.urls),
@@ -18,8 +18,8 @@ urlpatterns = [
     path('', main, name='main'),
 
     #Productos
-    path('productos/registrar', nuevo_producto, name='nuevo_producto'),                          #Registrar
-    path('productos', productos, name='productos'),                          #Consultar
+    path('productos/nuevo', nuevo_producto, name='nuevo_producto'),                          #Registrar
+    path('productos/', productos, name='productos'),                          #Consultar
     path('productos/eliminar/<int:producto_id>', eliminar_producto, name='eliminar_producto'),                          #Consultar
     path('productos/editar/<int:producto_id>', detalle_producto, name='detalle_producto'),                   #Visualizar
     path('productos/editar/guardar/<int:producto_id>', editar_producto, name='editar_producto'),                   #Visualizar
