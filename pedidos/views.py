@@ -8,17 +8,8 @@ from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, Destinatari
 
 # MENU      
 def menu(request):
-    contenido = {}
     
-    if request.user.is_authenticated:
-        if request.cliente:
-            contenido['cliente'] = request.cliente #llamo al cliente del middleware
-        else:
-            contenido['mensaje'] = "No tienes un cliente asociado"
-    else:
-        contenido['mensaje'] = "Bienvenido a Detalles Cariño"
-    
-    return render(request, 'menu.html', contenido)
+    return render(request, 'menu.html')
 
 
 # HOME      
@@ -74,10 +65,15 @@ def nuevo_cliente(request):
     if request.method == "POST":
         formulario = ClienteForm(request.POST)
         if formulario.is_valid():
+            # Si el usuario ya tiene un cliente, evita duplicados
+            if Cliente.objects.filter(user=request.user).exists():
+                mensaje_error = "Ya tienes un cliente asociado."
+                return render(request, 'clientes/registrar.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
+
             cliente = formulario.save(commit=False)
-            cliente.user_id = request.user.id 
+            cliente.user = request.user
             cliente.save()
-            return redirect('menu', cliente_id=cliente.id)
+            return redirect('main')
         else:
             mensaje_error = formulario.errors.as_text()
     else:
@@ -486,6 +482,7 @@ def editar_pedido(request, pedido_id):
     return render(request, 'pedidos/editar.html', contenido_final)
 
 def agregar_pedido(request, pedido_id, producto_id):
+    
     producto = get_object_or_404(Producto, id=producto_id)
     personalizaciones = producto.items.filter(tipo='base')
     items = Item.objects.filter(producto=producto)

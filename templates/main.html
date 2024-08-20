@@ -29,9 +29,10 @@
                 </div>
 
                 <div class="producto-opciones">
-                    <a class="button" href="{% url 'info_producto' producto.id %}">Personalizar</a>
-                    <a class="button" href="/anadir_producto_pedido/?producto_id={{producto.id}}&cantidad=1">Añadir al
-                        carrito</a>
+                    <a class="button" href="{% url 'nuevo_pedido' %}">Realizar Pedido</a>
+                    <!-- <a class="button" href="{% url 'info_producto' producto.id %}">Personalizar</a> -->
+                    <!-- <a class="button" href="/anadir_producto_pedido/?producto_id={{producto.id}}&cantidad=1">Añadir al
+                        carrito</a> -->
                 </div>
             </li>
 

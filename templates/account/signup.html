@@ -1,0 +1,73 @@
+{% extends 'menu.html' %}
+
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+
+<main role="main" class="container mt-5">
+  <div class="login-container">
+    <form id="signup-form" method="post" action="{% url 'account_signup' %}">
+      {% csrf_token %}
+      <h1>Registrarse</h1>
+
+      <!-- Username input -->
+      <div class="form-outline mb-4">
+        <label class="form-label" for="id_username">Usuario</label>
+        <input type="text" name="username" id="id_username" class="form-control" placeholder="Usuario" autocomplete="username" minlength="1" maxlength="150" required />
+      </div>
+
+      <!-- Password input -->
+      <div class="form-outline mb-4">
+        <label class="form-label" for="id_password1">Contraseña</label>
+        <input type="password" name="password1" id="id_password1" class="form-control" placeholder="Contraseña" autocomplete="new-password" required />
+        <span class="helptext">
+          <ul>
+            <li>Su contraseña no puede asemejarse tanto a su otra información personal.</li>
+            <li>Su contraseña debe contener al menos 8 caracteres.</li>
+            <li>Su contraseña no puede ser una clave utilizada comúnmente.</li>
+            <li>Su contraseña no puede ser completamente numérica.</li>
+          </ul>
+        </span>
+      </div>
+
+      <!-- Confirm Password input -->
+      <div class="form-outline mb-4">
+        <label class="form-label" for="id_password2">Contraseña (de nuevo)</label>
+        <input type="password" name="password2" id="id_password2" class="form-control" placeholder="Contraseña (de nuevo)" autocomplete="new-password" required />
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4">Registrarse</button>
+
+      <!-- Simple link -->
+      <p>¿Ya tiene una cuenta? Por favor <a href="{% url 'account_login' %}">inicie sesión</a>.</p>
+
+      <!-- Register buttons -->
+      <div class="redes_sociales text-center">
+        <p>Síguenos en:</p>
+        <div class="social-buttons">
+          <button type="button" class="btn btn-link btn-floating">
+            <i class="fab fa-facebook-f"></i>
+          </button>
+          <button type="button" class="btn btn-link btn-floating">
+            <i class="fab fa-tiktok"></i>
+          </button>
+          <button type="button" class="btn btn-link btn-floating">
+            <i class="fab fa-instagram"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  document.getElementById('signup-form').addEventListener('submit', function(event) {
+    setTimeout(function() {
+      window.location.href = "{% url 'nuevo_cliente' %}";
+    }, 3000); // Aumenta el tiempo de espera a 3 segundos para permitir el procesamiento completo
+  });
+</script>
+
+
+{% endblock %}

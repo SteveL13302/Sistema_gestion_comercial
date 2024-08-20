@@ -132,6 +132,12 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
+SIGNUP_REDIRECT_URL = '/cliente/nuevo'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/cliente/nuevo'
+
+
+
 # AUTHENTICATION_BACKENDS = [
 #     # Needed to login by username in Django admin, regardless of allauth
 #     'django.contrib.auth.backends.ModelBackend',

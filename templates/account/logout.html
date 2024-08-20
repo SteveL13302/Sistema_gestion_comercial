@@ -1,0 +1,24 @@
+<head>
+    {% load static %}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+</head>
+
+<main role="main" class="container mt-5">
+  <div class="login-container">
+    <h1>Cerrar sesión</h1>
+    <p>¿Seguro que desea cerrar sesión?</p>
+
+    <form method="post" action="{% url 'account_logout' %}">
+      {% csrf_token %}
+      
+      <!-- Confirmation Button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4">Cerrar sesión</button>
+    </form>
+
+    <div class="text-center mt-4">
+      <p><a href="{% url 'account_email' %}">Cambiar correo electrónico</a></p>
+      <p><a href="{% url 'account_change_password' %}">Cambiar la contraseña</a></p>
+    </div>
+  </div>
+</main>
+

@@ -23,10 +23,14 @@
   <div class="sidebar">
     <!-- nombre de usuario/cliente logeado o mensaje de bienvenida -->
     <h2>
+      {% if user.is_authenticated %}
       {% if cliente %}
       {{ cliente.nombre }}
       {% else %}
-      {{ mensaje }}
+      No tienes un cliente asociado
+      {% endif %}
+      {% else %}
+      Bienvenido a Detalles Cariño
       {% endif %}
     </h2>
 
@@ -34,69 +38,81 @@
     <p>Tu ID de usuario es {{ request.session.user_id }}</p>
     {% endif %}
 
+
     <ul class="nav flex-column">
-      
-      
+
       <li class="nav-item">
         <a class="nav-link" href="{% url 'main' %}">
           <i class="fas fa-house"></i> Inicio
         </a>
       </li>
 
-      <!-- Información del cliente al registrarse -->
-      <li class="nav-item">
-        {% if user.is_authenticated %}
-        <a class="nav-link" href="{% url 'clientes' cliente.id %}">
-          <i class="fas fa-user"></i> Cuenta
-        </a>
-        {% else %}
-        <a class="nav-link" href="{% url 'account_login' %}">
-          <i class="fas fa-user"></i> Iniciar sesión
-        </a>
-        {% endif %}
-      </li>
+      {% if user.is_authenticated %}
 
-      
+      {% if cliente.id %}
+      <a class="nav-link" href="{% url 'clientes' cliente.id %}">
+        <i class="fas fa-user"></i> Cuenta
+      </a>
+
       <li class="nav-item">
         <a class="nav-link" href="{% url 'pedidos2' cliente.id %}">
           <i class="fas fa-list"></i> Pedidos
         </a>
       </li>
 
-      
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'pedidos' %}">
-          <i class="fas fa-list"></i> Pedidos - Empleado
-        </a>
-      </li>
+        {% if user.is_staff %}
+        <h5>--- Administrar ---</h5>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'pedidos' %}">
+            <i class="fas fa-list"></i> Pedidos
+          </a>
+        </li>
 
-      
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'destinatarios' %}">
-          <i class="fas fa-users"></i> Destinatarios
-        </a>
-      </li>
 
-      
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'pagos' %}">
-          <i class="fas fa-dollar"></i> Pagos
-        </a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'destinatarios' %}">
+            <i class="fas fa-users"></i> Destinatarios
+          </a>
+        </li>
 
-      
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'productos' %}">
-          <i class="fas fa-box"></i> Productos
-        </a>
-      </li>
-      
-      
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'pagos' %}">
+            <i class="fas fa-dollar"></i> Pagos
+          </a>
+        </li>
+
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'productos' %}">
+            <i class="fas fa-box"></i> Productos
+          </a>
+        </li>
+        {% endif %}
+
       <li class="nav-item">
         <a class="nav-link" href="{% url 'account_logout' %}">
           <i class="fas fa-sign-out-alt"></i> Cerrar sesión
         </a>
       </li>
+      {% endif %}
+
+      {% else %}
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_login' %}">
+          <i class="fas fa-user"></i> Iniciar sesión
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_signup' %}">
+          <i class="fas fa-pencil"></i> Registrarse
+        </a>
+      </li>
+
+      {% endif %}
+
     </ul>
 
   </div>
