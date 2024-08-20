@@ -44,11 +44,6 @@
                     {% endfor %}
                 </table>
 
-                <div class="botones">
-                    <button id="btn-personalizar" class="btn btn-personalizar">Personalizar</button>
-                    <button id="btn-comprar" class="btn btn-comprar">Comprar</button>
-                </div>
-
                 <!-- Formulario de personalización -->
                 <div id="form-personalizacion" class="form-personalizacion">
                     <form method="post" action="{% url 'nuevo_item' producto.id %}" enctype="multipart/form-data">

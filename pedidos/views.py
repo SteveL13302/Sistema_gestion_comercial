@@ -482,7 +482,6 @@ def editar_pedido(request, pedido_id):
     return render(request, 'pedidos/editar.html', contenido_final)
 
 def agregar_pedido(request, pedido_id, producto_id):
-    
     producto = get_object_or_404(Producto, id=producto_id)
     personalizaciones = producto.items.filter(tipo='base')
     items = Item.objects.filter(producto=producto)

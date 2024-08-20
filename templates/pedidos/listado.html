@@ -38,26 +38,9 @@
           <td>{{ pedido.destinatario.nombre }}</td>
           <td>
             </form>
-
+            
             <div class="producto-opciones">
-              {% if pedido.id %}
-              <a style="color: red;" class="btn btn-sm btn-info me-2"
-                href="{% url 'agregar_pedido' pedido.id producto.id %}" >Agregar</a>
-              {% endif %}
-              
-              {% if producto.id %}
-              <a style="color: blue;" class="btn btn-sm btn-info me-2"
-                href="{% url 'agregar_pedido' pedido.id producto.id %}">Agregar</a>
-              {% endif %}
-
-              {% if pedido.id and producto.id %}
-              <a style="color: rgb(38, 255, 0);" class="btn btn-sm btn-info me-2"
-                href="{% url 'agregar_pedido' pedido.id producto.id %}">Agregar</a>
-              {% endif %}
-            </div>
-
-            <div class="producto-opciones">
-              <a class="btn btn-sm btn-info me-2" href="{% url 'agregar_pedido' pedido.id producto.id %}">Agregar</a>
+              <a class="btn btn-sm btn-info me-2" href="{% url 'agregar_pedido' pedido.id %}">Agregar</a>
             </div>
 
             <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-info btn-sm">
@@ -77,50 +60,40 @@
   </div>
 </main>
 
-<div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="agregarProductoModalLabel">Agregar Producto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-12">
-            <ul id="lista-productos" class="row">
-              {% for producto in productos %}
-              <li class="producto-item col-12 col-md-6 mb-3 d-flex">
-                <div class="producto-imagen me-3">
-                  <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid">
-                </div>
-                <div class="producto-datos">
-                  <strong>{{ producto.nombre }}</strong>
-                  <div class="producto-precio mb-2">{{ producto.precio_base }}</div>
-                </div>
-                <div class="producto-opciones">
-                  
-                  <a class="btn btn-sm btn-info me-2" href="{% url 'agregar_pedido' pedido.id producto.id %}">
-                    Agregar
-                  </a>
-
-                  <a class="btn btn-sm btn-info" href="#" data-bs-toggle="modal" data-bs-target="#agregarProductoModal"
-                    data-pedido-id="{{ pedido.id }}">
-                    Agregar Producto
-                  </a>
-
-                </div>
-              </li>
-              {% endfor %}
-            </ul>
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="agregarProductoModalLabel">Agregar Producto</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-        </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-12">
+                      <ul id="lista-productos" class="row">
+                          {% for producto in productos %}
+                          <li class="producto-item col-12 col-md-6 mb-3 d-flex">
+                              <div class="producto-imagen me-3">
+                                  <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid">
+                              </div>
+                              <div class="producto-datos">
+                                  <strong>{{ producto.nombre }}</strong>
+                                  <div class="producto-precio mb-2">{{ producto.precio_base }}</div>
+                              </div>
+                              <div class="producto-opciones">
+                                  <a class="btn btn-sm btn-info me-2" href="{% url 'agregar_pedido' pedido.id producto.id %}">Agregar</a>
+                              </div>
+                          </li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" form="formAgregarProducto" class="btn btn-primary">Guardar Producto</button>
+          </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" form="formAgregarProducto" class="btn btn-primary">Guardar Producto</button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -128,22 +101,22 @@
 {% endblock %}
 
 <script>
-  var agregarProductoModal = document.getElementById('agregarProductoModal');
-  agregarProductoModal.addEventListener('show.bs.modal', function (event) {
+var agregarProductoModal = document.getElementById('agregarProductoModal');
+agregarProductoModal.addEventListener('show.bs.modal', function (event) {
     // Botón que activó el modal
     var button = event.relatedTarget;
     // Extraer el ID del pedido del atributo data
     var pedidoId = button.getAttribute('data-pedido-id');
-
+    
     // Asegurarte de que pedidoId es válido
     if (pedidoId) {
-      // Actualizar todos los enlaces dentro del modal con el ID del pedido
-      var links = agregarProductoModal.querySelectorAll('.producto-opciones a');
-      links.forEach(function (link) {
-        var href = link.getAttribute('href');
-        href = href.replace('pedido_id_placeholder', pedidoId);
-        link.setAttribute('href', href);
-      });
+        // Actualizar todos los enlaces dentro del modal con el ID del pedido
+        var links = agregarProductoModal.querySelectorAll('.producto-opciones a');
+        links.forEach(function(link) {
+            var href = link.getAttribute('href');
+            href = href.replace('pedido_id_placeholder', pedidoId); 
+            link.setAttribute('href', href);
+        });
     }
-  });
+});
 </script>
