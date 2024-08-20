@@ -27,8 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    # 'allauth',
-    # 'allauth.account',
+    'allauth',
+    'allauth.account',
     'pedidos',
 ]
 
@@ -40,7 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # "allauth.account.middleware.AccountMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'gestioncomercial.urls'
@@ -69,29 +69,29 @@ WSGI_APPLICATION = 'gestioncomercial.wsgi.application'
 
 
 # BASE LOCAL
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'pedidos',
-#         'USER': 'root',
-#         'PASSWORD': '31298300',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
-
-
-# BASE SERVIDOR
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stevenxev$pedidos',
-        'USER': 'stevenxev',
-        'PASSWORD': 'sxev3129',
-        'HOST': 'stevenxev.mysql.pythonanywhere-services.com',
+        'NAME': 'pedidos',
+        'USER': 'root',
+        'PASSWORD': '31298300',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
+
+
+# BASE SERVIDOR
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'stevenxev$pedidos',
+#         'USER': 'stevenxev',
+#         'PASSWORD': 'sxev3129',
+#         'HOST': 'stevenxev.mysql.pythonanywhere-services.com',
+#         'PORT': '3306',
+#     }
+# }
 
 
 
