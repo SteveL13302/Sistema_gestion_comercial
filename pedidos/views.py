@@ -441,7 +441,7 @@ def nuevo_pedido(request):
         **contenido
     }
     
-    return render(request, 'pedidos/registro.html', contenido_final)
+    return render(request, 'pedidos/registrar.html', contenido_final)
 
 def eliminar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
@@ -484,7 +484,7 @@ def editar_pedido(request, pedido_id):
     return render(request, 'pedidos/editar.html', contenido_final)
 
 
-# DETALLE      
+# Detalle      
 def nueva_personalizacion(request):
     mensaje_error = ""
     if request.method == "POST":
@@ -501,6 +501,10 @@ def nueva_personalizacion(request):
         formulario = DetalleForm()
     
     return render(request, 'nueva_personalizacion.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
+
+
+# Personalizacion
+
 
 #def anadir_producto_pedido(request):
 #     producto_id = request.GET.get('producto_id', '')

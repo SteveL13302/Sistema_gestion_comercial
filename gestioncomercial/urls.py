@@ -31,10 +31,10 @@ urlpatterns = [
     path('items/eliminar/<int:item_id>/<int:producto_id>', eliminar_item, name='eliminar_item'),        #Eliminar
 
     #Clientes
-    path('cliente/nuevo', nuevo_cliente, name='nuevo_cliente'),                                 #Agregar
-    path('cliente/info/<int:cliente_id>', clientes, name='clientes'),                           #Info
+    path('cliente/nuevo', nuevo_cliente, name='nuevo_cliente'),                                         #Agregar
+    path('cliente/info/<int:cliente_id>', clientes, name='clientes'),                                   #Info
     path('cliente/editar/<int:cliente_id>', detalle_cliente, name='detalle_cliente'),                   #Cargar Datos
-    path('cliente/editar/guardar/<int:cliente_id>', editar_cliente, name='editar_cliente'),                    #Actualizar
+    path('cliente/editar/guardar/<int:cliente_id>', editar_cliente, name='editar_cliente'),             #Actualizar
     
     #Destinatarios
     path('destinatarios/nuevo', nuevo_destinatario, name='nuevo_destinatario'),                                     #Registrar
