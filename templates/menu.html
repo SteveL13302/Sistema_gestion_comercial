@@ -10,13 +10,13 @@
   <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="./static/sweetalert2/sweetalert2.min.css">
-  <script src="./static/sweetalert2/sweetalert2.min.js"></script>
-
   {% load static %}
+  <link rel="stylesheet" href="{% static 'sweetalert2/sweetalert2.min.css' %}">
+  <script src="{% static 'sweetalert2/sweetalert2.min.js' %}"></script>
   <link href="{% static 'css/main.css' %}" rel="stylesheet">
 
 </head>
+
 
 <body>
   <!-- Barra de Navegación Vertical -->
@@ -31,15 +31,22 @@
     </h2>
 
     {% if request.session.user_id %}
-      <p>Tu ID de usuario es {{ request.session.user_id }}</p>
+    <p>Tu ID de usuario es {{ request.session.user_id }}</p>
     {% endif %}
 
     <ul class="nav flex-column">
+      
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'main' %}">
+          <i class="fas fa-house"></i> Inicio
+        </a>
+      </li>
 
       <!-- Información del cliente al registrarse -->
       <li class="nav-item">
         {% if user.is_authenticated %}
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{% url 'clientes' cliente.id %}">
           <i class="fas fa-user"></i> Cuenta
         </a>
         {% else %}
@@ -49,34 +56,58 @@
         {% endif %}
       </li>
 
-      <!-- ver pedidos del usuario -->
+      
       <li class="nav-item">
-        <a class="nav-link" href="">
-          <i class="fas fa-dollar"></i> Pedidos
+        <a class="nav-link" href="{% url 'pedidos2' cliente.id %}">
+          <i class="fas fa-list"></i> Pedidos
         </a>
       </li>
-      <!-- cerrar sesión que se muestra solo si está logeado -->
+
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'pedidos' %}">
+          <i class="fas fa-list"></i> Pedidos - Empleado
+        </a>
+      </li>
+
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'destinatarios' %}">
+          <i class="fas fa-users"></i> Destinatarios
+        </a>
+      </li>
+
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'pagos' %}">
+          <i class="fas fa-dollar"></i> Pagos
+        </a>
+      </li>
+
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'productos' %}">
+          <i class="fas fa-box"></i> Productos
+        </a>
+      </li>
+      
+      
       <li class="nav-item">
         <a class="nav-link" href="{% url 'account_logout' %}">
           <i class="fas fa-sign-out-alt"></i> Cerrar sesión
         </a>
       </li>
-      <!-- apartado principal para ver productos -->
-      <li class="nav-item">
-        <a class="nav-link" href="../">
-          <i class="fas fa-box"></i> Detalles
-        </a>
-      </li>
     </ul>
+
   </div>
 </body>
 
 
 
 <!-- Contenido principal -->
-  {% block content %}
-  <!-- El contenido específico de cada plantilla  -->
-  {% endblock %}
+{% block content %}
+<!-- El contenido específico de cada plantilla  -->
+{% endblock %}
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
   integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

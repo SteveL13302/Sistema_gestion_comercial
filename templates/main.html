@@ -3,7 +3,7 @@
 {% block title %}Lista de Productos{% endblock %}
 
 {% block content %}
-<main role="main" class="container mt-5">
+<main role="main" class="container">
     <div class="producto">
         <h1 class="producto-titulo">Productos Disponibles</h1>
 
@@ -19,23 +19,22 @@
         <ul id="lista-productos">
             {% for producto in productos %}
             <li class="producto-item">
+                <div class="producto-datos">
+                    <strong>{{ producto.nombre }}</strong>
+                    <div class="producto-precio">{{ producto.precio_base }}</div>
+                </div>
+
                 <div class="producto-imagen">
                     <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
                 </div>
 
-                <div class="producto-datos">
-                    <strong>{{ producto.nombre }}</strong><br>
-                    Descripción: {{ producto.descripcion }}<br>
-                    Precio base: {{ producto.precio_base }}<br>
-                    Categoría: {{ producto.categoria }}
-                </div>
-
                 <div class="producto-opciones">
-                    <a class="button">Personalizar</a>
+                    <a class="button" href="{% url 'info_producto' producto.id %}">Personalizar</a>
                     <a class="button" href="/anadir_producto_pedido/?producto_id={{producto.id}}&cantidad=1">Añadir al
                         carrito</a>
                 </div>
             </li>
+
             {% endfor %}
         </ul>
     </div>

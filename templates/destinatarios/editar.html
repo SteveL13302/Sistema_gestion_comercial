@@ -1,19 +1,19 @@
 
 {% extends 'menu.html' %}
 
-{% block title %}Editar Producto{% endblock %}
+{% block title %}Editar Destinatario{% endblock %}
 
 {% block content %}
 <main role="main" class="container">
   <div class="frm_container">
-    <h1>Editar Producto</h1>
+    <h1>Editar Destinatario</h1>
     <hr>
 
-    <form method="post" action="{% url 'editar_producto' producto.id %}" enctype="multipart/form-data">
+    <form method="post" action="{% url 'editar_destinatario' destinatario.id %}">
       {% csrf_token %}
       {{ formulario }}
       <input type="submit" value="Guardar" class="btn btn-primary">
-      <a href="{% url 'productos' %}" class="btn btn-secondary mt-3">Volver a la lista</a>
+      <a href="{% url 'destinatarios' %}" class="btn btn-secondary mt-3">Volver a la lista</a>
     </form>
 
     {% if mensaje_error %}

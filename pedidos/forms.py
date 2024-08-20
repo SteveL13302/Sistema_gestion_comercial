@@ -13,7 +13,6 @@ class ClienteForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 0987654321'}),
             'ciudad': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Santo Domingo'}),
             'direccion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Calle Principal, Calle Secundaria, Referencia'}),
-            # 'user': forms.Select(attrs={'class': 'form-control'}),
             'user': forms.HiddenInput(),
         }
 

@@ -1,41 +1,49 @@
 {% extends 'menu.html' %}
 
-{% block title %}Productos{% endblock %}
+{% block title %}Pagos{% endblock %}
 
 {% block content %}
 <main role="main" class="container mt-5">
   <div class="info-cliente">
 
-    <!-- Historial de pedidos  -->
-    <h2 class="mb-4">Lista de Productos</h2>
+    <!-- Lista de pagos  -->
+    <h2 class="mb-4">Lista de Pagos</h2>
     <table class="table">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Descripcion</th>
-          <th scope="col">Categoria</th>
-          <th scope="col">Acciones </th>
+          <th scope="col">Método</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Comprobante</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {% for producto in productos %}
+        {% for pago in pagos %}
         <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ producto.nombre }}</td>
-          <td>{{ producto.descripcion }}</td>
-          <td>{{ producto.categoria }}</td>
+          <th scope="row">{{ pago.id }}</th>
+          <!-- <th scope="row">{{ forloop.counter }}</th> -->
+          <td>{{ pago.metodo }}</td>
+          <td>{{ pago.estado }}</td>
+          <td>
+            {% if pago.comprobante %}
+              <a href="{{ pago.comprobante.url }}" target="_blank">Ver Comprobante</a>
+            {% else %}
+              No disponible
+            {% endif %}
+          </td>
           <td>
 
-            <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-info btn-sm">
+            <a href="{% url 'detalle_pago' pago.id %}" class="btn btn-info btn-sm">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5.1 0 0 0 1 2.5z"/>
               </svg>
-              Editar</a>
+              Editar
+            </a>
 
-            <!-- Botón para borrar el producto -->
-            <form action="{% url 'eliminar_producto' producto.id %}" method="post" style="display:inline;" class="delete-form">
+            <!-- Botón para borrar el pago -->
+            <form action="{% url 'eliminar_pago' pago.id %}" method="post" style="display:inline;" class="delete-form">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger btn-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -46,13 +54,7 @@
                 </button>
             </form>
 
-            <a href="{% url 'info_producto' producto.id %}" class="btn btn-secondary btn-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-              </svg>
-              items</a>
-        </td>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -69,7 +71,7 @@
 
         Swal.fire({
           title: '¿Estás seguro?',
-          text: "¡No podrás recuperar este producto después de eliminarlo!",
+          text: "¡No podrás recuperar este pago después de eliminarlo!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
