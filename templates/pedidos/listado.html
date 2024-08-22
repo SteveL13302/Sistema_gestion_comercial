@@ -40,7 +40,7 @@
             </form>
             
             <div class="producto-opciones">
-              <a class="btn btn-sm btn-info me-2" href="{% url 'agregar_pedido' pedido.id %}">Agregar</a>
+              
             </div>
 
             <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-info btn-sm">
@@ -81,7 +81,7 @@
                                   <div class="producto-precio mb-2">{{ producto.precio_base }}</div>
                               </div>
                               <div class="producto-opciones">
-                                  <a class="btn btn-sm btn-info me-2" href="{% url 'agregar_pedido' pedido.id producto.id %}">Agregar</a>
+                                
                               </div>
                           </li>
                           {% endfor %}

@@ -24,10 +24,10 @@
     <!-- nombre de usuario/cliente logeado o mensaje de bienvenida -->
     <h2>
       {% if user.is_authenticated %}
-      {% if cliente %}
-      {{ cliente.nombre }}
-      {% else %}
-      No tienes un cliente asociado
+        {% if cliente %}
+        {{ cliente.nombre }}
+        {% else %}
+        No tienes un cliente asociado
       {% endif %}
       {% else %}
       Bienvenido a Detalles Cariño

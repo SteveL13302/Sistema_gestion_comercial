@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from pedidos.views import pedidos2, menu, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, info_producto, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, eliminar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items
+from pedidos.views import pedidos2, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, info_producto, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, eliminar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items
 from django.conf import settings
 from django.views.generic import RedirectView
 from django.conf.urls.static import static
@@ -11,7 +11,7 @@ urlpatterns = [
     path('accounts/profile/', RedirectView.as_view(pattern_name='main', permanent=False)),    #edirigir cualquier acceso a la URL /accounts/profile/ hacia la URL asociada con la vista main.
     
     #Menu
-    path('menu', menu, name='menu'),
+    # path('menu', menu, name='menu'),
 
     #Panel Admin Django
     path('admin/', admin.site.urls),
@@ -24,10 +24,7 @@ urlpatterns = [
     path('productos/nuevo', nuevo_producto, name='nuevo_producto'),                                     #Registrar
     path('productos/eliminar/<int:producto_id>', eliminar_producto, name='eliminar_producto'),          #Eliminar
     path('productos/editar/<int:producto_id>', detalle_producto, name='detalle_producto'),              #Cargar Datos
-    path('productos/editar/guardar/<int:producto_id>', editar_producto, name='editar_producto'),        #Actualizar
-
-    #Pedido
-    #path('pedido/nuevo/<int:producto_id>', nuevo_item, name='nuevo_item'),       
+    path('productos/editar/guardar/<int:producto_id>', editar_producto, name='editar_producto'),        #Actualizar   
 
     #Items
     path('items/<int:producto_id>', info_producto, name='info_producto'),                               #Visualizar
@@ -37,8 +34,8 @@ urlpatterns = [
     #Clientes
     path('cliente/nuevo', nuevo_cliente, name='nuevo_cliente'),                                 #Agregar
     path('cliente/info/<int:cliente_id>', clientes, name='clientes'),                           #Info
-    path('cliente/editar/<int:cliente_id>', detalle_cliente, name='detalle_cliente'),                   #Cargar Datos
-    path('cliente/editar/guardar/<int:cliente_id>', editar_cliente, name='editar_cliente'),                    #Actualizar
+    path('cliente/editar/<int:cliente_id>', detalle_cliente, name='detalle_cliente'),           #Cargar Datos
+    path('cliente/editar/guardar/<int:cliente_id>', editar_cliente, name='editar_cliente'),     #Actualizar
     
     #Destinatarios
     path('destinatarios/nuevo', nuevo_destinatario, name='nuevo_destinatario'),                                     #Registrar
@@ -56,13 +53,13 @@ urlpatterns = [
     path('pagos/editar/guardar/<int:pago_id>', editar_pago, name='editar_pago'),            #Actualizar
 
     #Pedido
-    path('cliente/pedidos/<int:cliente_id>', pedidos2, name='pedidos2'),                          #Pedidos - Cliente en especifico
-    path('pedidos', pedidos, name='pedidos'),                                                    #Visualizar
-    path('pedidos/nuevo', nuevo_pedido, name='nuevo_pedido'),                                    #Registrar
-    path('pedidos/editar/<int:pedido_id>', detalle_pedido, name='detalle_pedido'),              #Cargar Datos
-    path('pedidos/editar/guardar/<int:pedido_id>', editar_pedido, name='editar_pedido'),         #Actualizar
-    path('pedidos/agregar/<int:pedido_id>/<int:producto_id>', agregar_pedido, name='agregar_pedido'),         #Agrega Producto
-    path('pedidos/registrar', agregar_pedido_items, name='agregar_pedido_items'),
+    path('cliente/pedidos/<int:cliente_id>', pedidos2, name='pedidos2'),                                #Pedidos - Cliente en especifico
+    path('pedidos', pedidos, name='pedidos'),                                                           #Visualizar
+    path('pedidos/nuevo', nuevo_pedido, name='nuevo_pedido'),                                           #Registrar
+    path('pedidos/editar/<int:pedido_id>', detalle_pedido, name='detalle_pedido'),                      #Cargar Datos
+    path('pedidos/editar/guardar/<int:pedido_id>', editar_pedido, name='editar_pedido'),                #Actualizar
+    path('pedidos/agregar/<int:pedido_id>/<int:producto_id>', agregar_pedido, name='agregar_pedido'),   #Agrega Producto
+    path('pedidos/registrar', agregar_pedido_items, name='agregar_pedido_items'),                       #Agrega Item
 
     #Carrito
     #path('anadir_producto_pedido/', anadir_producto_pedido, name='anadir_producto_pedido'),    #Agregar

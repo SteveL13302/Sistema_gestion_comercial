@@ -59,7 +59,9 @@ tbody td {
 }
 
 .sidebar a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: #ec9813;
+  font-size: 20px;
 }
 
 /* Contenido principal */
