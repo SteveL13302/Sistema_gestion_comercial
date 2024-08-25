@@ -1,0 +1,35 @@
+{% extends 'menu.html' %}
+
+{% block title %}Pedidos{% endblock %}
+
+{% block content %}
+<main role="main" class="container mt-5">
+  <div class="info-cliente">
+
+    <!-- Historial de pedidos  -->
+    <h2 class="mb-4">Historial de Pedidos</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Destinatario</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Detalle </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pedido in pedidos %}
+        <tr>
+          <th scope="row"><a href="">{{ pedido.id }}</a></th>
+          <td>{{ pedido.fecha }}</td>
+          <td>{{ pedido.destinatario.nombre }}</td>
+          <td>{{ pedido.estado }}</td>
+          <td> Ver detalle </td> <!-- rediccionar a el detalle del pedido  -->
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+{% endblock %}

@@ -1,9 +1,26 @@
 from django.contrib import admin
-from .models import Cliente, Producto, Destinatario, Item, Pago, Pedido, PedidoDetalle
+from .models import Cliente, Producto, Item, Destinatario, Pago, Pedido, Detalle, Personalizacion
 
 class ItemInline(admin.TabularInline):
     model = Item
-    extra = 0  # Número de formularios vacíos adicionales que se mostrarán
+    extra = 0  # N de formularios vacíos adicionales
+
+class PersonalizacionInline(admin.TabularInline):
+    model = Personalizacion
+    readonly_fields = ('total',) 
+    extra = 0 
+
+@admin.register(Cliente)
+class ClienteAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'nombre',
+        'cedula',
+        'email',
+        'telefono',
+        'ciudad',
+        'direccion',
+    )
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
@@ -12,30 +29,17 @@ class ProductoAdmin(admin.ModelAdmin):
         'nombre',
         'descripcion',
         'imagen',
-        'precio_base',
         'categoria',
+        'precio_base',
     )
-    inlines = [ItemInline]
-    readonly_fields = ('precio_base',)  # Hace que el campo precio_base sea de solo lectura
+
+    inlines = [ItemInline]  #Argega form de items
+    readonly_fields = ('precio_base',)  # Campo para solo lectura
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'nombre', 'imagen', 'precio', 'tipo', 'producto')
     list_filter = ('producto',)
-
-# El resto de los modelos
-@admin.register(Cliente)
-class ClienteAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'nombre',
-        'contrasenia',
-        'cedula',
-        'email',
-        'telefono',
-        'ciudad',
-        'direccion',
-    )
 
 @admin.register(Destinatario)
 class DestinatarioAdmin(admin.ModelAdmin):
@@ -47,17 +51,26 @@ class PagoAdmin(admin.ModelAdmin):
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cliente', 'fecha', 'estado', 'pago')
-    list_filter = ('cliente', 'fecha', 'pago')
+    list_display = ('id', 'estado', 'fecha', 'cliente', 'pago', 'destinatario')
+    list_filter = ('fecha', 'cliente', 'pago', 'destinatario',)
 
-@admin.register(PedidoDetalle)
-class PedidoDetalleAdmin(admin.ModelAdmin):
+@admin.register(Detalle)
+class DetalleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nombre', 'imagen', 'categoria', 'precio')
+    inlines = [PersonalizacionInline]
+    readonly_fields = ('precio',) 
+
+@admin.register(Personalizacion)
+class PersonalizacionAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'pedido',
-        'producto',
-        'destinatario',
+        'nombre',
+        'imagen',
+        'precio_individual',
         'cantidad',
         'total',
+        'tipo',
+        'detalle',
     )
-    list_filter = ('pedido', 'producto', 'destinatario')
+    list_filter = ('detalle',)
+    readonly_fields = ('total',) 
