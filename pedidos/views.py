@@ -126,32 +126,26 @@ def productos(request):
     }
     return render(request, 'productos/listado.html', contenido)
 
+@staff_member_required
 def nuevo_producto(request):
     mensaje_error = ""
-    
+
     if request.method == "POST":
-        formulario = ProductoForm(request.POST)
+        formulario = ProductoForm(request.POST, request.FILES) 
         if formulario.is_valid():
-            producto = formulario.save(commit=False)
-            producto.imagen = 'productos/producto-default.jpg'
-            producto.save()
+            formulario.save()
             return redirect('/')
         else:
             mensaje_error = formulario.errors.as_text()
     else:
         formulario = ProductoForm()
 
-    contenido = {
-        'cliente': request.cliente  # Llama al cliente del middleware
-    }
-    
-    # Combina los diccionarios
     contenido_final = {
         'formulario': formulario,
         'mensaje_error': mensaje_error,
-        **contenido
+        'cliente': getattr(request, 'cliente', None)
     }
-    
+
     return render(request, 'productos/registrar.html', contenido_final)
 
 def eliminar_producto(request, producto_id):

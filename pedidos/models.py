@@ -19,7 +19,7 @@ class Cliente(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=50)
     descripcion = models.TextField(max_length=200)
-    imagen = models.ImageField(upload_to='productos/', default='productos/producto-default.jpg' , null=True, blank=True)
+    imagen = models.ImageField(upload_to='media/productos/', default='media/productos/producto-default.jpg' , null=True, blank=True)
     categoria = models.CharField(max_length=100)
     precio_base = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
 
