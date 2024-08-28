@@ -9,8 +9,8 @@ from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago
 from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioForm, PagoForm, PedidoForm, EmailForm
 
 # MENU      
-def menu(request): 
-    return render(request, 'menu.html')
+# def menu(request): 
+#     return render(request, 'menu.html')
 
 
 # HOME      
@@ -147,6 +147,33 @@ def nuevo_producto(request):
     }
 
     return render(request, 'productos/registrar.html', contenido_final)
+# def nuevo_producto(request):
+#     mensaje_error = ""
+    
+#     if request.method == "POST":
+#         formulario = ProductoForm(request.POST)
+#         if formulario.is_valid():
+#             producto = formulario.save(commit=False)
+#             producto.imagen = 'productos/producto-default.jpg'
+#             producto.save()
+#             return redirect('/')
+#         else:
+#             mensaje_error = formulario.errors.as_text()
+#     else:
+#         formulario = ProductoForm()
+
+#     contenido = {
+#         'cliente': request.cliente  # Llama al cliente del middleware
+#     }
+    
+#     # Combina los diccionarios
+#     contenido_final = {
+#         'formulario': formulario,
+#         'mensaje_error': mensaje_error,
+#         **contenido
+#     }
+    
+#     return render(request, 'productos/registrar.html', contenido_final)
 
 def eliminar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
@@ -590,25 +617,53 @@ def nueva_personalizacion(request):
 #     detalle_pedido.save()
 #     return response
 
+
 def enviar_correo(request):
     if request.method == "POST":
         formulario = EmailForm(request.POST)
         if formulario.is_valid():
-            correo_usuario = formulario.cleaned_data['correo_usuario']
+            # Obtener los datos del formulario
+            destinatario = formulario.cleaned_data['destinatario']
             asunto = formulario.cleaned_data['asunto']
             mensaje = formulario.cleaned_data['mensaje']
 
             # Configurar el envío del correo
             send_mail(
                 asunto,  # Asunto del correo
-                f"Mensaje de: {correo_usuario}\n\n{mensaje}",  # Mensaje incluyendo el correo del usuario
+                mensaje,  # Mensaje
                 settings.EMAIL_HOST_USER,  # Remitente
-                ['stevenesparza36@gmail.com'],  # Destinatario fijo
+                [destinatario],  # Destinatario proporcionado por el usuario
                 fail_silently=False,
             )
 
-            return redirect('correo_enviado')  # Redireccionar después de enviar
+            # Redireccionar después de enviar el correo
+            return redirect('correo_enviado')
     else:
         formulario = EmailForm()
 
+    # Renderizar el formulario
     return render(request, 'enviar_correo.html', {'formulario': formulario})
+
+
+# def enviar_correo(request):
+#     if request.method == "POST":
+#         formulario = EmailForm(request.POST)
+#         if formulario.is_valid():
+#             correo_usuario = formulario.cleaned_data['correo_usuario']
+#             asunto = formulario.cleaned_data['asunto']
+#             mensaje = formulario.cleaned_data['mensaje']
+
+#             # Configurar el envío del correo
+#             send_mail(
+#                 asunto,  # Asunto del correo
+#                 f"Mensaje de: {correo_usuario}\n\n{mensaje}",  # Mensaje incluyendo el correo del usuario
+#                 settings.EMAIL_HOST_USER,  # Remitente
+#                 ['stevenesparza36@gmail.com'],  # Destinatario fijo
+#                 fail_silently=False,
+#             )
+
+#             return redirect('correo_enviado')  # Redireccionar después de enviar
+#     else:
+#         formulario = EmailForm()
+
+#     return render(request, 'enviar_correo.html', {'formulario': formulario})
