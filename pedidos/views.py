@@ -9,8 +9,8 @@ from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago
 from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioForm, PagoForm, PedidoForm, EmailForm
 
 # MENU      
-# def menu(request): 
-#     return render(request, 'menu.html')
+def menu(request): 
+    return render(request, 'menu.html')
 
 
 # HOME      
