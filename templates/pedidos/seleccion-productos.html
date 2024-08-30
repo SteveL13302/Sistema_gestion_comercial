@@ -49,13 +49,12 @@
 
     <!-- Tabla de productos (simplificada) -->
     <h2 class="m-4 mb-4 text-center">Items Agregados</h2>
+
     <h3 class="mt-4">Total Seleccionado: <span id="totalSeleccionado">0.00</span></h3>
 
-    <form id="agregarPedidoForm" method="post" action="{% url 'agregar_pedido_items' %}">
+    <form id="agregarPedidoForm" method="post" action="{% url 'agregar_pedido_items' pedido_id producto.id %}">
         {% csrf_token %}
-        <input type="hidden" name="pedido_id" value="{{ pedido_id }}">
-        <input type="hidden" name="producto_id" value="{{ producto.id }}">
-
+    
         <h3>Selecciona los items para agregar al pedido:</h3>
         <table class="table">
             <thead>
@@ -72,24 +71,27 @@
                 {% for item in items %}
                 <tr>
                     <td>
-                        <input type="checkbox" class="item-check" name="items" value="{{ item.id }}"
-                            data-precio="{{ item.precio }}">
+                        <input type="checkbox" class="item-check" name="items" value="{{ item.id }}" data-precio="{{ item.precio }}">
                     </td>
                     <td>{{ item.nombre }}</td>
-                    <td class="precio" data-precio="{{ item.precio }}">{{ item.precio }}</td>
+                    <td class="precio">{{ item.precio }}</td>
                     <td>{{ item.tipo }}</td>
                     <td>
-                        <input type="number" name="cantidad_{{ item.id }}" value="1" min="1"
-                            class="form-control cantidad" data-item-id="{{ item.id }}" data-precio="{{ item.precio }}">
+                        <input type="number" name="cantidades" value="1" min="1" class="form-control cantidad">
                     </td>
                     <td>
                         <span class="total">{{ item.precio|floatformat:2 }}</span>
                     </td>
+                    
+                    <!-- Agregando inputs hidden para enviar los demás datos al backend -->
+                    <input type="hidden" name="nombre_{{ item.id }}" value="{{ item.nombre }}">
+                    <input type="hidden" name="precio_{{ item.id }}" value="{{ item.precio }}">
+                    <input type="hidden" name="tipo_{{ item.id }}" value="{{ item.tipo }}">
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
+    
         <button type="submit" class="btn btn-primary">Agregar al Pedido</button>
     </form>
 

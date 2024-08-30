@@ -1,0 +1,23 @@
+{% extends 'menu.html' %}
+
+{% block title %}Detalles Cariño: {{producto.nombre}} {% endblock %}
+
+{% block content %}
+
+<main class="mr-4">
+
+    <!-- Formulario de personalización -->
+    <div id="form-personalizacion" class="form-personalizacion">
+        <form method="post" action="{% url 'editar_item' item.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ formulario.as_p }}
+            <input type="submit" value="Actualizar" class="btn btn-primary">
+        </form>
+        {% if mensaje_error %}
+        <p class="error">{{ mensaje_error }}</p>
+        {% endif %}
+    </div>
+
+</main>
+
+{% endblock %}

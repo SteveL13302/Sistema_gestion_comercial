@@ -242,6 +242,69 @@ def nuevo_item(request, producto_id):
     
     return render(request, 'productos/listado.html', contenido)
 
+def detalle_item(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    formulario = ItemForm(instance=item)
+    contenido = {
+        'formulario': formulario,
+        'item': item 
+    }
+
+    return render(request, 'items/editar.html', contenido)
+
+def editar_cliente(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    
+    if request.method == 'POST':
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            cliente = form.save(commit=False)
+            cliente.user = request.user  # Establecer el campo user con el usuario actual
+            cliente.save()
+            return redirect('clientes', cliente_id=cliente.id)
+    else:
+        form = ClienteForm(instance=cliente)
+
+    contenido_final = {
+        'formulario': form,
+        'cliente': request.cliente  # Incluye el cliente del middleware
+    }
+    
+    return render(request, 'clientes/editar.html', contenido_final)
+
+def editar_item(request, item_id):
+    mensaje_error = ""
+
+    item = get_object_or_404(Item, id=item_id)
+
+    next_url = request.GET.get('next', request.META.get('HTTP_REFERER', '/'))
+
+    if "next=" in next_url:
+        next_url = next_url.split("next=")[-1]
+
+    print("Next URL:", next_url)
+    
+    if request.method == "POST":
+        formulario = ItemForm(request.POST, request.FILES, instance=item)
+        if formulario.is_valid():
+            item = formulario.save(commit=False)
+            item.imagen = 'productos/Screenshot_2.png'  
+            item.save()
+            return redirect(next_url)
+        else:
+            mensaje_error = formulario.errors.as_text()
+    else:
+        
+        formulario = ItemForm(instance=item)
+    
+    contenido = {
+        'formulario': formulario,
+        'item': item,
+        'mensaje_error': mensaje_error
+    }
+
+    return render(request, 'items/editar.html', contenido)
+
 def eliminar_item(request, item_id, producto_id):
     item = get_object_or_404(Item, id=item_id)
     
@@ -440,6 +503,41 @@ def nuevo_pedido(request):
     
     return render(request, 'pedidos/registrar.html', contenido_final)
 
+def pedido_crear(request):
+    cliente_id = request.session.get('user_id')
+    print(f"Cliente ID desde la sesión: {cliente_id}")
+
+    if not cliente_id:
+        return HttpResponseRedirect('/')  
+    
+    # Crea el pedido con estado "carrito" y el cliente autenticado
+    pedido = Pedido.objects.create(
+        estado="carrito",
+        cliente_id=request.cliente.id
+    )
+
+    # Redirige a la lista de productos con el ID del pedido recién creado
+    return redirect('productos_lista', pedido.id)
+
+def productos_lista(request, pedido_id):
+    categoria = request.GET.get('categoria', '')
+    
+    if categoria:
+        productos = Producto.objects.filter(categoria=categoria)
+    else:
+        productos = Producto.objects.all()
+        
+    categorias = Producto.objects.values_list('categoria', flat=True).distinct()
+    
+    contenido = {
+        'productos': productos,
+        'categorias': categorias,
+        'cliente': request.cliente,  #llamo al cliente del middleware
+        'id_pedido': pedido_id
+    }
+    
+    return render(request, 'pedidos/listado-productos.html', contenido)
+
 def eliminar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     
@@ -498,45 +596,58 @@ def agregar_pedido(request, pedido_id, producto_id):
     }
     return render(request, 'pedidos/seleccion-productos.html', contenido)
 
-def agregar_pedido_items(request):
+def agregar_pedido_items(request, pedido_id, producto_id):
     if request.method == 'POST':
-        pedido_id = request.POST.get('pedido_id')
-        producto_id = request.POST.get('producto_id')
-
-        print(f"request ID: {request}")
 
         # Imprimir valores para depuración
-        print(f"Pedido ID: {pedido_id}")
-        print(f"Producto ID: {producto_id}")
+        print(f"Pedido IDsasdas: {pedido_id}")
+        print(f"Producto IDassasasda: {producto_id}")
+
+        producto = get_object_or_404(Producto, id=producto_id)
 
         # Crear un nuevo detalle
         nuevo_detalle = Detalle.objects.create(
-            nombre=Detalle.nombre,
-            imagen=Detalle.imagen,
-            categoria=Detalle.categoria,
-            precio=Detalle.precio,
+            nombre=producto.nombre,
+            imagen=producto.imagen,
+            categoria=producto.categoria,
+            precio=producto.precio_base,
             pedido_id=pedido_id  # Asignar el pedido_id al nuevo detalle
         )
         
-        # Procesar cada personalización seleccionada
-        for key, value in request.POST.items():
-            if key.startswith('cantidad_'):
-                item_id = key.split('_')[1]
-                try:
-                    cantidad = int(value)
-                    if cantidad > 0:
-                        personalizacion = Personalizacion.objects.get(id=item_id)
-                        Personalizacion.objects.create(
-                            nombre=personalizacion.nombre,
-                            precio_individual=personalizacion.precio_individual,
-                            cantidad=cantidad,
-                            total=personalizacion.precio_individual * cantidad,
-                            tipo=personalizacion.tipo,
-                            detalle=nuevo_detalle
-                        )
-                except (Personalizacion.DoesNotExist, ValueError):
-                    continue
+       # Obtener los items seleccionados en el formulario
+        selected_items = request.POST.getlist('items')
+        print("Items seleccionados:", selected_items)
 
+        selected_cantidades = request.POST.getlist('cantidades')
+        print("cantidades seleccionados:", selected_cantidades)
+
+        for item_id in selected_items:
+            try:
+                # Obtener los valores desde el formulario
+                nombre = request.POST.get(f'nombre_{item_id}')
+                precio = float(request.POST.get(f'precio_{item_id}', 0))
+                tipo = request.POST.get(f'tipo_{item_id}')
+                cantidad = int(request.POST.get(f'cantidad_{item_id}', 1))
+                total = precio * cantidad  # Calcular el total
+
+                # Depuración: imprimir los valores obtenidos
+                print(f"Item ID: {item_id}, Nombre: {nombre}, Precio: {precio}, Tipo: {tipo}, Cantidad: {cantidad}, Total: {total}")
+
+                # Crear la personalización asociada al detalle
+                Personalizacion.objects.create(
+                    nombre=nombre,
+                    precio_individual=precio,
+                    cantidad=cantidad,
+                    total=total,
+                    tipo=tipo,
+                    detalle=nuevo_detalle  # Asociar con el detalle recién creado
+                )
+
+            except ValueError as e:
+                print(f"Error en el procesamiento del item {item_id}: {e}")  # Depuración
+                continue
+
+        # Redirigir al detalle del pedido después de guardar las personalizaciones
         return redirect('detalle_pedido', pedido_id=pedido_id)
     else:
         return HttpResponse('Método no permitido', status=405)
