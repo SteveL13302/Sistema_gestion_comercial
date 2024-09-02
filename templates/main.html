@@ -3,6 +3,7 @@
 {% block title %}Lista de Productos{% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 <div class="producto">
     <h1 class="producto-titulo">Productos Disponibles</h1>
     <p>Demuestrale tu amor regalandole uno de nuestros detalles <strong>Cariño</strong></p>
@@ -13,6 +14,42 @@
         {% for cat in categorias %}
         <button class="boton-categoria filtro-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
         {% endfor %}
+=======
+<main role="main" class="container">
+    <div class="producto">
+        <h1 class="producto-titulo">Productos Disponibles</h1>
+
+        <!-- Filtro de Categorías con JavaScript -->
+        <div id="filtro">
+            <button class="boton-categoria" data-categoria="">Todas las categorías</button>
+            {% for cat in categorias %}
+            <button class="boton-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
+            {% endfor %}
+        </div>
+
+        <!-- Lista de Productos -->
+        <ul id="lista-productos">
+            {% for producto in productos %}
+            <li class="producto-item">
+                <div class="producto-datos">
+                    <strong>{{ producto.nombre }}</strong>
+                    <div class="producto-precio">{{ producto.precio_base }}</div>
+                </div>
+
+                <div class="producto-imagen">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                </div>
+
+                <div class="producto-opciones">
+                    <a class="button" href="{% url 'info_producto' producto.id %}">Personalizar</a>
+                    <a class="button" href="/anadir_producto_pedido/?producto_id={{producto.id}}&cantidad=1">Añadir al
+                        carrito</a>
+                </div>
+            </li>
+
+            {% endfor %}
+        </ul>
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
     </div>
 
     <!-- Lista de Productos -->

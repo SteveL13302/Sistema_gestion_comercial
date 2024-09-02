@@ -144,8 +144,14 @@ main ul li {
   gap: 20px; /* Espacio entre productos */
 }
 
+
+
 .producto-item {
+<<<<<<< HEAD
   width: 325px;
+=======
+  width: 400px;
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
   padding: 20px 25px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -168,6 +174,10 @@ main ul li {
 
 .producto-datos strong {
   font-size: 20px;
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
   font-weight: 10;
   color: #333; /* Color del texto del nombre */
   margin: 0;

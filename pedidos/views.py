@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
+<<<<<<< HEAD
 from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago, Personalizacion
 from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioForm, PagoForm, PedidoForm
 
@@ -11,6 +12,26 @@ from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, Destinatari
 #     return render(request, 'menu.html')
 
 
+=======
+from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago
+from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioForm, PagoForm, PedidoForm
+
+# MENU      
+def menu(request):
+    contenido = {}
+    
+    if request.user.is_authenticated:
+        if request.cliente:
+            contenido['cliente'] = request.cliente #llamo al cliente del middleware
+        else:
+            contenido['mensaje'] = "No tienes un cliente asociado"
+    else:
+        contenido['mensaje'] = "Bienvenido a Detalles Cariño"
+    
+    return render(request, 'menu.html', contenido)
+
+
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
 # HOME      
 def main(request):
     categoria = request.GET.get('categoria', '')
@@ -64,6 +85,7 @@ def nuevo_cliente(request):
     if request.method == "POST":
         formulario = ClienteForm(request.POST)
         if formulario.is_valid():
+<<<<<<< HEAD
             # Si el usuario ya tiene un cliente, evita duplicados
             if Cliente.objects.filter(user=request.user).exists():
                 mensaje_error = "Ya tienes un cliente asociado."
@@ -73,6 +95,12 @@ def nuevo_cliente(request):
             cliente.user = request.user
             cliente.save()
             return redirect('main')
+=======
+            cliente = formulario.save(commit=False)
+            cliente.user_id = request.user.id 
+            cliente.save()
+            return redirect('menu', cliente_id=cliente.id)
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
         else:
             mensaje_error = formulario.errors.as_text()
     else:
@@ -206,6 +234,10 @@ def info_producto(request, producto_id):
     }
     return render(request, 'items/info_productos.html', contenido)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
 # ITEM      
 def items(request):
     items = Item.objects.all()
@@ -404,12 +436,18 @@ def editar_pago(request, pago_id):
 # Pedido
 def pedidos(request):
     pedidos = Pedido.objects.all()
+<<<<<<< HEAD
     productos = Producto.objects.all()
 
     contenido = {
         'pedidos': pedidos,
         'cliente': request.cliente,  # Llama al cliente del middleware
         'productos': productos,
+=======
+    contenido = {
+        'pedidos': pedidos,
+        'cliente': request.cliente  # Llama al cliente del middleware
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
     }
     return render(request, 'pedidos/listado.html', contenido)
 
@@ -480,6 +518,7 @@ def editar_pedido(request, pedido_id):
     
     return render(request, 'pedidos/editar.html', contenido_final)
 
+<<<<<<< HEAD
 def agregar_pedido(request, pedido_id, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     personalizaciones = producto.items.filter(tipo='base')
@@ -542,6 +581,10 @@ def agregar_pedido_items(request):
         return HttpResponse('Método no permitido', status=405)
 
 # DETALLE      
+=======
+
+# Detalle      
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
 def nueva_personalizacion(request):
     mensaje_error = ""
     if request.method == "POST":
@@ -559,7 +602,11 @@ def nueva_personalizacion(request):
     
     return render(request, 'nueva_personalizacion.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
-# def anadir_producto_pedido(request):
+
+# Personalizacion
+
+
+#def anadir_producto_pedido(request):
 #     producto_id = request.GET.get('producto_id', '')
 #     cantidad = request.GET.get('cantidad', '')
 #     pedido_id = request.COOKIES.get('pedido_id', None)

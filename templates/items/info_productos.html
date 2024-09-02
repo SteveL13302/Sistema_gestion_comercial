@@ -4,6 +4,7 @@
 
 {% block content %}
 
+<<<<<<< HEAD
 
 <!-- Info productos  -->
 <div class="info-producto">
@@ -14,6 +15,9 @@
         <div class="img">
             <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
         </div>
+=======
+<main class="mr-4">
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
 
         <!-- Detalles -->
         <div class="info">
@@ -55,6 +59,55 @@
                 {% endif %}
             </div>
 
+<<<<<<< HEAD
+=======
+            <!-- Detalles -->
+            <div class="info">
+                <table>
+                    <tr>
+                        <td><strong>Descripción:</strong></td>
+                        <td>{{ producto.descripcion }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precio base:</strong></td>
+                        <td>{{ producto.precio_base }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Categoría:</strong></td>
+                        <td>{{ producto.categoria }}</td>
+                    </tr>
+                </table>
+
+                <h5>Incluye:</h5>
+                <table>
+                    {% for personalizacion in personalizaciones %}
+                    <tr>
+                        <td>
+                            <i class="fas fa-check"></i> {{ personalizacion.nombre }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <div class="botones">
+                    <button id="btn-personalizar" class="btn btn-personalizar">Personalizar</button>
+                    <button id="btn-comprar" class="btn btn-comprar">Comprar</button>
+                </div>
+
+                <!-- Formulario de personalización -->
+                <div id="form-personalizacion" class="form-personalizacion">
+                    <form method="post" action="{% url 'nuevo_item' producto.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ formulario.as_p }}
+                        <input type="submit" value="Guardar Personalización" class="btn btn-primary">
+                    </form>
+                    {% if mensaje_error %}
+                    <p class="error">{{ mensaje_error }}</p>
+                    {% endif %}
+                </div>
+
+            </div>
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
         </div>
     </div>
 </div>

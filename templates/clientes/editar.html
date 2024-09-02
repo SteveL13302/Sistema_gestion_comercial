@@ -1,8 +1,13 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
 {% extends 'menu.html' %}
 
 {% block title %}Actualizar Información{% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 
 <div class="frm_container">
   <h1>Actualizar Información</h1>
@@ -32,3 +37,36 @@
 </div>
 
 {% endblock %}
+=======
+<main role="main" class="container">
+  <div class="frm_container">
+    <h1>Actualizar Información</h1>
+    <hr>
+
+    <form method="post" action="{% url 'editar_cliente' cliente.id %}">
+      {% csrf_token %}
+      {{ formulario.as_p }}
+      <input type="submit" value="Guardar" class="btn btn-primary">
+      <a href="{% url 'clientes' cliente.id %}" class="btn btn-secondary mt-3">Volver a la lista</a>
+    </form>
+
+    {% if formulario.errors %}
+    <div class="alert alert-danger mt-3">
+      <ul>
+        {% for field in formulario %}
+          {% for error in field.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+        {% for error in formulario.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</main>
+
+{% endblock %}
+
+>>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
