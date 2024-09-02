@@ -1,0 +1,155 @@
+/* Para pantallas de 768px y menores */
+@media screen and (max-width: 768px) {
+
+  .sidebar {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    font-size: 12px;
+
+    h2 {
+      font-size: 20px;
+      padding: 0px 0px 0px 0px;
+    }
+
+    h5 {
+      font-size: 15px;
+      text-align: center;
+      padding: 10px 0px 0px;
+    }
+
+    a {
+      padding: 5px 15px 5px;
+    }
+
+    a:hover {
+      font-size: 14px;
+    }
+
+  }
+  
+  main {
+    left:0;
+    padding: 15px;
+  }
+
+  .producto-item {
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+
+  .producto-titulo {
+    font-size: 35px;
+    text-align: center;
+  }
+
+  .producto-datos {
+    flex: 1; /* Ocupa el espacio restante en el contenedor */
+    text-align: left;
+  }
+  
+  .producto-precio {
+    width: 50px;
+    height: 50px;
+    font-size: 14px;
+    text-align: center; /* Centra el texto dentro del área de precio */
+  }
+
+  .frm_container {
+    margin: 10px auto;
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .frm_container h1 {
+    font-size: 24px;
+  }
+
+  #filtro {
+    flex-direction: row;
+    padding-bottom: 0px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .boton-categoria {
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+
+  .card {
+    justify-content: center;
+    max-width: 95%;
+    flex-basis: 100%;
+  }
+
+  main h2{
+    text-align: center;
+    color: #ec9813;
+    font-weight: bold;
+  }
+
+  thead {
+    display: none; /* Oculta la cabecera en pantallas pequeñas */
+  }
+
+  tbody, tr, td {
+    display: block; /* Hace que las filas se comporten como bloques */
+    margin: 10px;
+    flex-basis: 100%; /* Asegura que ocupen todo el ancho disponible */
+  }
+
+  tr {
+    margin-bottom: 15px; /* Añade un espacio entre las filas */
+  }
+
+  td {
+    text-align: right; /* Alinea el contenido a la derecha */
+    padding-left: 50%; /* Añade un espacio antes del contenido */
+    position: relative;
+  }
+
+  td::before {
+    content: attr(data-label); /* Usa el atributo data-label para mostrar el nombre de la columna */
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    font-weight: bold; /* Texto en negrita para distinguir */
+    text-align: left; /* Alinea el nombre de la columna a la izquierda */
+  }
+}
+
+/* Para pantallas de 480px y menores */
+@media screen and (max-width: 555px) {
+  .sidebar h2 {
+    font-size: 14px;
+  }
+
+  .sidebar a {
+    font-size: 14px;
+  }
+
+  .producto-titulo {
+    font-size: 18px;
+  }
+
+  .producto-precio {
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .frm_container h1 {
+    font-size: 20px;
+  }
+
+  .frm_container input[type="submit"] {
+    font-size: 16px;
+  }
+
+  .filtro-categoria {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+}

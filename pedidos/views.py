@@ -559,7 +559,7 @@ def nueva_personalizacion(request):
     
     return render(request, 'nueva_personalizacion.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
-#def anadir_producto_pedido(request):
+# def anadir_producto_pedido(request):
 #     producto_id = request.GET.get('producto_id', '')
 #     cantidad = request.GET.get('cantidad', '')
 #     pedido_id = request.COOKIES.get('pedido_id', None)

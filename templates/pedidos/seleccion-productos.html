@@ -3,9 +3,6 @@
 {% block title %}Detalles Cariño: {{producto.nombre}} {% endblock %}
 
 {% block content %}
-
-<main class="mr-4">
-
     <!-- Info productos  -->
     <div class="info-producto">
         <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
@@ -217,7 +214,5 @@
             updateTotal();
         });
     </script>
-
-</main>
 
 {% endblock %}

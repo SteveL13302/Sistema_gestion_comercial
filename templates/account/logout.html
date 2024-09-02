@@ -1,9 +1,10 @@
 <head>
     {% load static %}
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
 </head>
 
-<main role="main" class="container mt-5">
+<main>
   <div class="login-container">
     <h1>Cerrar sesión</h1>
     <p>¿Seguro que desea cerrar sesión?</p>
@@ -16,9 +17,10 @@
     </form>
 
     <div class="text-center mt-4">
-      <p><a href="{% url 'account_email' %}">Cambiar correo electrónico</a></p>
       <p><a href="{% url 'account_change_password' %}">Cambiar la contraseña</a></p>
+      <p><a href="/">Regresar</a></p>
     </div>
   </div>
 </main>
+  
 
