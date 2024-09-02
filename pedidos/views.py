@@ -594,28 +594,36 @@ def nueva_personalizacion(request):
     
     return render(request, 'nueva_personalizacion.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
-#def anadir_producto_pedido(request):
-#     producto_id = request.GET.get('producto_id', '')
-#     cantidad = request.GET.get('cantidad', '')
-#     pedido_id = request.COOKIES.get('pedido_id', None)
-#     #response = HttpResponse("Cookie Set!")
-#     contenido = {}
-#     response = render(request, 'borrador.html', contenido)
+def anadir_producto_pedido(request):
+    # Al presionar agregar al carrito se debe enviar esto
+    producto_id = request.GET.get('producto_id', '')
+    cantidad = request.GET.get('cantidad', '')
+    pedido_id = request.COOKIES.get('pedido_id', None)
+    response = HttpResponse("Cookie Set!")
+
+    # contenido = {}
+    # response = render(request, 'borrador.html', contenido)
     
-#     if pedido_id:
-#         pedido = Pedido.objects.filter(estado_pedido = 'carrito', id = pedido_id).last()
-#     else:
-#         pedido = None
+    if pedido_id:
+        pedido = Pedido.objects.filter(estado = 'carrito', id = pedido_id).last()
+    else:
+        pedido = None
 
-#     if pedido == None: 
-#         pedido = Pedido(estado_pedido = 'borrador')
-#         pedido.save()
-#         response.set_cookie('pedido_id', pedido.id)
+    if pedido == None: 
+        pedido = Pedido(estado = 'carrito')
+        pedido.save()
+        response.set_cookie('pedido_id', pedido.id)
 
-#     producto = Producto.objects.get(id = producto_id)
-#     detalle_pedido = PedidoDetalle(pedido=pedido, producto=producto, cantidad= int(cantidad))
-#     detalle_pedido.save()
-#     return response
+    producto = Producto.objects.get(id = producto_id)
+    # Acceder a los atributos del producto
+    nombre_producto = producto.nombre
+    #TODO: VERIFICAR IMAGEN Y PRECIO INT
+    imagen_producto = producto.imagen
+    categoria_producto = producto.categoria
+    precio_producto = producto.precio_base
+    detalle_pedido = Detalle(nombre=nombre_producto, imagen=imagen_producto, categoria=categoria_producto, precio= int(precio_producto))
+    detalle_pedido.save()
+    return response
 
 
 def enviar_correo(request):
