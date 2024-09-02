@@ -14,7 +14,7 @@ class Cliente(models.Model):
         db_table = 'cliente' 
     
     def __str__(self) -> str:
-        return f"{self.nombre}, {self.cedula}"
+        return f"{self.nombre}, {self.cedula}, {self.id}"
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=50)
@@ -91,7 +91,7 @@ class Pedido(models.Model):
 
 class Detalle(models.Model):
     nombre = models.CharField(max_length=50)
-    imagen = models.ImageField(upload_to='productos/', null=True, blank=True) # Quitar para que se suba el archivo // llamar a la imagen directa del producto
+    imagen = models.ImageField(upload_to='productos/', default='productos/producto-default.jpg' , null=True, blank=True) # Quitar para que se suba el archivo // llamar a la imagen directa del producto
     categoria = models.CharField(max_length=100)
     precio = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name="pedidos", blank=True, null=True)
@@ -111,7 +111,7 @@ class Personalizacion(models.Model):
     OPC_DETALLE = [("base", "Producto Base"), ("extra", "Personalización")]
 
     nombre = models.CharField(max_length=50)
-    imagen = models.ImageField(upload_to='items/', null=True, blank=True)  # Quitar para que se suba el archivo // llamar a la imagen directa del producto
+    imagen = models.ImageField(upload_to='items/', default='productos/producto-default.jpg' , null=True, blank=True)  # Quitar para que se suba el archivo // llamar a la imagen directa del producto
     precio_individual = models.DecimalField(max_digits=10, decimal_places=2)
     cantidad = models.IntegerField(default=1)
     total = models.DecimalField(max_digits=10, decimal_places=2)

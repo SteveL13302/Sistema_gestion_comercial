@@ -112,6 +112,7 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <!-- Tabla de productos (simplificada) -->
 <h2 class="m-4 mb-4 text-center">Items Agregados</h2>
 <table class="table">
@@ -144,6 +145,40 @@
         {% endfor %}
     </tbody>
 </table>
+=======
+    <!-- Tabla de productos (simplificada) -->
+    <h2 class="m-4 mb-4 text-center">Items Agregados</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ item.nombre }}</td>
+                <td>{{ item.precio }}</td>
+                <td>{{ item.tipo }}</td>
+                <td>
+                    <a href="{% url 'detalle_item' item.id %}?next={{ request.path }}" class="btn btn-info btn-sm">Editar</a>
+                    <form action="{% url 'eliminar_item' item.id item.producto_id %}" method="post" style="display:inline;"
+                        class="delete-item">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                    </form>
+                    <!-- <a href="{% url 'info_producto' producto.id %}" class="btn btn-secondary btn-sm">items</a> -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+>>>>>>> d593b3c170280e68ba4483d18a1ed09bc916c767
 
 
 <script>
