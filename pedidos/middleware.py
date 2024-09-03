@@ -14,7 +14,6 @@ class SaveUserIdMiddleware(MiddlewareMixin):
             request.session.pop('user_id', None)
         return response
 
-<<<<<<< HEAD
 # class ClienteMiddleware(MiddlewareMixin):
 #     def process_request(self, request):
 #         if request.user.is_authenticated:
@@ -35,17 +34,5 @@ class ClienteMiddleware(MiddlewareMixin):
                 request.cliente = Cliente.objects.get(user_id=request.user.id)
             except Cliente.DoesNotExist:
                 request.cliente = None
-=======
-class ClienteMiddleware(MiddlewareMixin):
-    def process_request(self, request):
-        if request.user.is_authenticated:
-            if 'user_id' in request.session:
-                try:
-                    request.cliente = Cliente.objects.get(user_id=request.session['user_id'])
-                except Cliente.DoesNotExist:
-                    request.cliente = None
-            else:
-                request.cliente = request.user.cliente if hasattr(request.user, 'cliente') else None
->>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
         else:
             request.cliente = None

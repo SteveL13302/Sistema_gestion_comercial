@@ -3,6 +3,7 @@
 {% block title %}Pagos{% endblock %}
 
 {% block content %}
+<main role="main" class="container mt-5">
   <div class="info-cliente">
 
     <!-- Lista de pagos  -->
@@ -22,9 +23,9 @@
         <tr>
           <th scope="row">{{ pago.id }}</th>
           <!-- <th scope="row">{{ forloop.counter }}</th> -->
-          <td data-label="Método">{{ pago.metodo }}</td>
-          <td data-label="Estado">{{ pago.estado }}</td>
-          <td data-label="Comprobante">
+          <td>{{ pago.metodo }}</td>
+          <td>{{ pago.estado }}</td>
+          <td>
             {% if pago.comprobante %}
               <a href="{{ pago.comprobante.url }}" target="_blank">Ver Comprobante</a>
             {% else %}
@@ -59,6 +60,7 @@
       </tbody>
     </table>
   </div>
+</main>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {

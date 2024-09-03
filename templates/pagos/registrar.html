@@ -1,17 +1,14 @@
 {% extends 'menu.html' %}
 
-{% block title %}Nuevo Destinatario{% endblock %}
+{% block title %}Nuevo Pago{% endblock %}
 
 {% block content %}
-<<<<<<< HEAD
-=======
 <main role="main" class="container">
->>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
   <div class="frm_container">
-    <h1>Nuevo Destinatario</h1>
+    <h1>Nuevo Pago</h1>
     <hr>
 
-    <form method="post" action="{% url 'nuevo_destinatario' %}">
+    <form method="post" action="{% url 'nuevo_pago' %}">
       {% csrf_token %}
       {{ formulario }}
       <input type="submit" value="Guardar" class="btn btn-primary">
@@ -37,8 +34,5 @@
     </ul>
     {% endif %}
   </div>
-<<<<<<< HEAD
-=======
 </main>
->>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
 {% endblock %}

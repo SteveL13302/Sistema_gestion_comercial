@@ -16,8 +16,6 @@ class Cliente(models.Model):
     def __str__(self) -> str:
         return f"{self.nombre}, {self.cedula}, {self.id}"
 
-## sada
-
 class Producto(models.Model):
     nombre = models.CharField(max_length=50)
     descripcion = models.TextField(max_length=200)

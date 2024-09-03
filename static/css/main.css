@@ -1,43 +1,15 @@
-/* Estilos de fondo del body */
+/* Estilos generales */
 body {
   font-family: Arial, sans-serif;
-  color: #000000; /* Color del texto */
-  position: relative; /* Necesario para el pseudo-elemento */
+  margin: 20px;
+  padding: 0;
+  background-color: #f9f9f9;
 }
-
-/* Imagen de fondo */
-body::before {
-  content: "";
-  position: fixed; /* Fijo para que la imagen de fondo no se mueva al hacer scroll */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-image: url("../img/bg-main.jpg");
-  background-size: cover; /* Ajusta la imagen para cubrir todo el fondo */
-  background-position: center; /* Centra la imagen en el fondo */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
-  z-index: -1; /* Coloca la imagen detrás del contenido */
-}
-
-/* Color sólido con transparencia en el fondo del contenido */
-body::after {
-  content: "";
-  position: fixed; /* Absoluto para cubrir todo el body */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; /* Cambia a 100% para cubrir todo el contenido */
-  background-color: rgba(255, 255, 255, 0.85); /* Color blanco con opacidad */
-  z-index: -1; 
-}
-
 
 table {
   background-color: #fff;
-  border-radius: 20px;
+  border-radius: 5px;
   border: 1px solid #ddd;
-  -webkit-overflow-scrolling: touch;
 }
 
 thead th {
@@ -57,24 +29,20 @@ tbody td {
   vertical-align: middle;
 }
 
-
 /* Barra lateral */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 250px;
-  height: 100vh;
+  height: 100%;
   background-color: #871f23;
   padding: 20px;
   color: #f8f9fa;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  z-index: 1;
 }
 
 .sidebar h2 {
-  text-align: center;
-  font-size: 30px;
   margin-top: 0;
 }
 
@@ -98,14 +66,8 @@ tbody td {
 
 /* Contenido principal */
 main {
-  top: 0;
-  left: 135px;
-  height: 100vh;
+  margin-left: 270px; /* Deja espacio para la barra lateral */
   padding: 20px;
-  justify-content: center;
-  position: relative;
-  z-index: 1; /* Asegura que el contenido esté por encima del color y la imagen */
-  
 }
 
 main ul {
@@ -117,16 +79,9 @@ main ul li {
   margin-bottom: 10px;
 }
 
-
-
 /* Productos */
 .producto {
   padding: 20px;
-  text-align: center;
-}
-
-.producto strong {
-  color: #ec9813;
 }
 
 .producto-titulo {
@@ -147,11 +102,7 @@ main ul li {
 
 
 .producto-item {
-<<<<<<< HEAD
-  width: 325px;
-=======
   width: 400px;
->>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
   padding: 20px 25px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -174,10 +125,7 @@ main ul li {
 
 .producto-datos strong {
   font-size: 20px;
-<<<<<<< HEAD
-=======
   
->>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
   font-weight: 10;
   color: #333; /* Color del texto del nombre */
   margin: 0;
@@ -258,10 +206,6 @@ main ul li {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.filtro-categoria {
-  background-color: #fff; /* Color de fondo predeterminado */
-}
-
 .filtro-categoria:hover {
   background-color: #ec9813;
   color: #333;
@@ -271,19 +215,6 @@ main ul li {
   background-color: #ec9813;
   color: #fff;
   border-color: none;
-}
-
-.activo {
-  background-color: #ec9813; 
-  color: #fff; 
-  font-weight: bold;
-  border-color: #ec9813; 
-}
-
-.activo:hover {
-  background-color: #fff; 
-  color: #333; 
-  font-weight:normal;
 }
 
 /* Información del producto */

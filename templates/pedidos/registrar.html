@@ -3,27 +3,6 @@
 {% block title %}Nuevo Pedido{% endblock %}
 
 {% block content %}
-<<<<<<< HEAD
-
-<div class="frm_container">
-  <h1>Nuevo Pedido</h1>
-  <hr>
-
-  <form method="post" action="{% url 'nuevo_pedido' %}">
-    {% csrf_token %}
-    {{ formulario.as_p }}
-    <input type="submit" value="Guardar" class="btn btn-primary">
-  </form>
-
-  {% if mensaje_error %}
-  <div class="alert alert-danger mt-3">
-    {{ mensaje_error }}
-  </div>
-  {% endif %}
-</div>
-
-{% endblock %}
-=======
 <main role="main" class="container">
   <div class="frm_container">
     <h1>Nuevo Pedido</h1>
@@ -43,4 +22,3 @@
   </div>
 </main>
 {% endblock %}
->>>>>>> 8c9ea26bb767f236a6778a3174630cfa22d79cc4
