@@ -4,96 +4,93 @@
 
 {% block content %}
 
-<main class="mr-4">
+<!-- Info productos  -->
+<div class="info-producto">
+    <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
 
-    <!-- Info productos  -->
-    <div class="info-producto">
-        <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
+    <div class="producto-contenido">
+        <!-- Imagen -->
+        <div class="img">
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+        </div>
 
-        <div class="producto-contenido">
-            <!-- Imagen -->
-            <div class="img">
-                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+        <!-- Detalles -->
+        <div class="info">
+            <table>
+                <tr>
+                    <td><strong>Descripción:</strong></td>
+                    <td>{{ producto.descripcion }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Precio base:</strong></td>
+                    <td>{{ producto.precio_base }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Categoría:</strong></td>
+                    <td>{{ producto.categoria }}</td>
+                </tr>
+            </table>
+
+            <h5>Incluye:</h5>
+            <table>
+                {% for personalizacion in personalizaciones %}
+                <tr>
+                    <td>
+                        <i class="fas fa-check"></i> {{ personalizacion.nombre }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <!-- Formulario de personalización -->
+            <div id="form-personalizacion" class="form-personalizacion">
+                <form method="post" action="{% url 'nuevo_item' producto.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ formulario.as_p }}
+                    <input type="submit" value="Guardar Personalización" class="btn btn-primary">
+                </form>
+                {% if mensaje_error %}
+                <p class="error">{{ mensaje_error }}</p>
+                {% endif %}
             </div>
 
-            <!-- Detalles -->
-            <div class="info">
-                <table>
-                    <tr>
-                        <td><strong>Descripción:</strong></td>
-                        <td>{{ producto.descripcion }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precio base:</strong></td>
-                        <td>{{ producto.precio_base }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Categoría:</strong></td>
-                        <td>{{ producto.categoria }}</td>
-                    </tr>
-                </table>
-
-                <h5>Incluye:</h5>
-                <table>
-                    {% for personalizacion in personalizaciones %}
-                    <tr>
-                        <td>
-                            <i class="fas fa-check"></i> {{ personalizacion.nombre }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-
-                <!-- Formulario de personalización -->
-                <div id="form-personalizacion" class="form-personalizacion">
-                    <form method="post" action="{% url 'nuevo_item' producto.id %}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ formulario.as_p }}
-                        <input type="submit" value="Guardar Personalización" class="btn btn-primary">
-                    </form>
-                    {% if mensaje_error %}
-                    <p class="error">{{ mensaje_error }}</p>
-                    {% endif %}
-                </div>
-
-            </div>
         </div>
     </div>
+</div>
 
-    <!-- Tabla de productos (simplificada) -->
-    <h2 class="m-4 mb-4 text-center">Items Agregados</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ item.nombre }}</td>
-                <td>{{ item.precio }}</td>
-                <td>{{ item.tipo }}</td>
-                <td>
-                    <a href="{% url 'detalle_item' item.id %}?next={{ request.path }}" class="btn btn-info btn-sm">Editar</a>
-                    <form action="{% url 'eliminar_item' item.id item.producto_id %}" method="post" style="display:inline;"
-                        class="delete-item">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
-                    </form>
-                    <!-- <a href="{% url 'info_producto' producto.id %}" class="btn btn-secondary btn-sm">items</a> -->
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-</main>
+<!-- Tabla de productos (simplificada) -->
+<h2 class="m-4 mb-4 text-center">Items Agregados</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <th scope="row" data-label="#">{{ forloop.counter }}</th>
+            <td data-label="Nombre">{{ item.nombre }}</td>
+            <td data-label="Precio">{{ item.precio }}</td>
+            <td data-label="Tipo">{{ item.tipo }}</td>
+            <td>
+                <a href="{% url 'detalle_item' item.id %}?next={{ request.path }}"
+                    class="btn btn-info btn-sm">Editar</a>
+                <form action="{% url 'eliminar_item' item.id item.producto_id %}" method="post" style="display:inline;"
+                    class="delete-item">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                </form>
+                <!-- <a href="{% url 'info_producto' producto.id %}" class="btn btn-secondary btn-sm">items</a> -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

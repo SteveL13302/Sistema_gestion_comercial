@@ -4,7 +4,6 @@
 
 {% block content %}
 
-<main role="main" class="container mt-5">
   <div class="login-container">
     <form id="signup-form" method="post" action="{% url 'account_signup' %}">
       {% csrf_token %}
@@ -46,20 +45,19 @@
       <div class="redes_sociales text-center">
         <p>Síguenos en:</p>
         <div class="social-buttons">
-          <button type="button" class="btn btn-link btn-floating">
+          <a href="https://www.facebook.com/detalles.carino.sd/" class="btn btn-link btn-floating" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-facebook-f"></i>
-          </button>
-          <button type="button" class="btn btn-link btn-floating">
+          </a>
+          <a href="https://www.tiktok.com/@carino.sd?_t=8pOFFconRIb&_r=1" class="btn btn-link btn-floating" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-tiktok"></i>
-          </button>
-          <button type="button" class="btn btn-link btn-floating">
+          </a>
+          <a href="https://www.instagram.com/carino.sd?igsh=MXJsZWJpZjE0cjRocQ==" class="btn btn-link btn-floating" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-instagram"></i>
-          </button>
+          </a>
         </div>
       </div>
     </form>
   </div>
-</main>
 
 <script>
   document.getElementById('signup-form').addEventListener('submit', function(event) {

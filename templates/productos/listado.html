@@ -3,7 +3,6 @@
 {% block title %}Productos{% endblock %}
 
 {% block content %}
-<main role="main" class="container mt-5">
   <div class="info-cliente">
 
     <!-- Historial de pedidos  -->
@@ -22,9 +21,9 @@
         {% for producto in productos %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ producto.nombre }}</td>
-          <td>{{ producto.descripcion }}</td>
-          <td>{{ producto.categoria }}</td>
+          <td data-label="Producto">{{ producto.nombre }}</td>
+          <td data-label="">{{ producto.descripcion }}</td>
+          <td data-label="Categoria">{{ producto.categoria }}</td>
           <td>
 
             <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-info btn-sm">
@@ -58,8 +57,7 @@
       </tbody>
     </table>
   </div>
-</main>
-
+  
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.delete-form').forEach(form => {

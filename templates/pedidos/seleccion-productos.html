@@ -4,8 +4,6 @@
 
 {% block content %}
 
-<main class="mr-4">
-
     <!-- Info productos  -->
     <div class="info-producto">
         <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
@@ -49,7 +47,6 @@
 
     <!-- Tabla de productos (simplificada) -->
     <h2 class="m-4 mb-4 text-center">Items Agregados</h2>
-
     <h3 class="mt-4">Total Seleccionado: <span id="totalSeleccionado">0.00</span></h3>
 
     <form id="agregarPedidoForm" method="post" action="{% url 'agregar_pedido_items' pedido_id producto.id %}">
@@ -70,16 +67,16 @@
             <tbody>
                 {% for item in items %}
                 <tr>
-                    <td>
+                    <td data-label="Seleccionar:">
                         <input type="checkbox" class="item-check" name="items" value="{{ item.id }}" data-precio="{{ item.precio }}">
                     </td>
-                    <td>{{ item.nombre }}</td>
-                    <td class="precio">{{ item.precio }}</td>
-                    <td>{{ item.tipo }}</td>
+                    <td data-label="Nombre">{{ item.nombre }}</td>
+                    <td class="Precio" data-label="Precio">{{ item.precio }}</td>
+                    <td data-label="Tipo">{{ item.tipo }}</td>
                     <td>
                         <input type="number" name="cantidades" value="1" min="1" class="form-control cantidad">
                     </td>
-                    <td>
+                    <td data-label="Total - Item(s)">
                         <span class="total">{{ item.precio|floatformat:2 }}</span>
                     </td>
                     
@@ -126,7 +123,6 @@
         });
     </script>
     
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var cantidadInputs = document.querySelectorAll('.cantidad');
@@ -167,7 +163,6 @@
             });
         });
     </script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -219,7 +214,5 @@
             updateTotal();
         });
     </script>
-
-</main>
 
 {% endblock %}

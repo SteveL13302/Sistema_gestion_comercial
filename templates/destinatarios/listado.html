@@ -3,11 +3,11 @@
 {% block title %}Destinatarios{% endblock %}
 
 {% block content %}
-<main role="main" class="container mt-5">
   <div class="info-cliente">
 
     <!-- Lista de destinatarios  -->
     <h2 class="mb-4">Lista de Destinatarios</h2>
+    
     <table class="table">
       <thead>
         <tr>
@@ -22,11 +22,11 @@
       <tbody>
         {% for destinatario in destinatarios %}
         <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ destinatario.nombre }}</td>
-          <td>{{ destinatario.telefono }}</td>
-          <td>{{ destinatario.ciudad }}</td>
-          <td>{{ destinatario.direccion }}</td>
+          <th scope="row" data-label="#">{{ forloop.counter }}</th>
+          <td data-label="Nombre">{{ destinatario.nombre }}</td>
+          <td data-label="Teléfono">{{ destinatario.telefono }}</td>
+          <td data-label="Ciudad">{{ destinatario.ciudad }}</td>
+          <td data-label="Dirección">{{ destinatario.direccion }}</td>
           <td>
 
             <a href="{% url 'detalle_destinatario' destinatario.id %}" class="btn btn-info btn-sm">
@@ -48,13 +48,12 @@
                 </button>
             </form>
 
-        </td>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-</main>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
