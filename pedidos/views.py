@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.mail import send_mail
+from django.conf import settings
 
 from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago, Personalizacion
 from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioForm, PagoForm, PedidoForm
@@ -121,15 +124,14 @@ def productos(request):
     }
     return render(request, 'productos/listado.html', contenido)
 
+@staff_member_required
 def nuevo_producto(request):
     mensaje_error = ""
     
     if request.method == "POST":
-        formulario = ProductoForm(request.POST)
+        formulario = ProductoForm(request.POST, request.FILES)
         if formulario.is_valid():
-            producto = formulario.save(commit=False)
-            producto.imagen = 'productos/producto-default.jpg'
-            producto.save()
+            formulario.save()
             return redirect('/')
         else:
             mensaje_error = formulario.errors.as_text()
@@ -144,7 +146,7 @@ def nuevo_producto(request):
     contenido_final = {
         'formulario': formulario,
         'mensaje_error': mensaje_error,
-        **contenido
+        'cliente': getattr(request, 'cliente', None)
     }
     
     return render(request, 'productos/registrar.html', contenido_final)
@@ -683,6 +685,33 @@ def nueva_personalizacion(request):
         formulario = DetalleForm()
     
     return render(request, 'nueva_personalizacion.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
+
+#CORREO
+def enviar_correo(request):
+    if request.method == "POST":
+        formulario = EmailForm(request.POST)
+        if formulario.is_valid():
+            # Obtener los datos del formulario
+            destinatario = formulario.cleaned_data['destinatario']
+            asunto = formulario.cleaned_data['asunto']
+            mensaje = formulario.cleaned_data['mensaje']
+
+            # Configurar el envío del correo
+            send_mail(
+                asunto,  # Asunto del correo
+                mensaje,  # Mensaje
+                settings.EMAIL_HOST_USER,  # Remitente
+                [destinatario],  # Destinatario proporcionado por el usuario
+                fail_silently=False,
+            )
+
+            # Redireccionar después de enviar el correo
+            return redirect('correo_enviado')
+    else:
+        formulario = EmailForm()
+
+    # Renderizar el formulario
+    return render(request, 'enviar_correo.html', {'formulario': formulario})
 
 #def anadir_producto_pedido(request):
 #     producto_id = request.GET.get('producto_id', '')

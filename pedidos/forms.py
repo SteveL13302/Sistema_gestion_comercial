@@ -98,3 +98,16 @@ class PersonalizacionForm(forms.ModelForm):
             'tipo': forms.Select(attrs={'class': 'form-control'}),
             'detalle': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class EmailForm(forms.Form):
+    destinatario = forms.EmailField(
+        label="Destinatario", 
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Correo del destinatario'})
+    )
+    asunto = forms.CharField(
+        max_length=100, 
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Asunto del correo'})
+    )
+    mensaje = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Escribe tu mensaje aquí'})
+    )

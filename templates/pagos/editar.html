@@ -9,7 +9,7 @@
     <h1>Editar Pago</h1>
     <hr>
 
-    <form method="post" action="{% url 'editar_pago' pago.id %}">
+    <form method="post" action="{% url 'editar_pago' pago.id %}" enctype="multipart/form-data">
       {% csrf_token %}
       {{ formulario }}
       <input type="submit" value="Guardar" class="btn btn-primary">
