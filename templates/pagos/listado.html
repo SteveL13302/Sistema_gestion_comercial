@@ -21,8 +21,8 @@
       <tbody>
         {% for pago in pagos %}
         <tr>
-          <th scope="row" data-label="#">{{ pago.id }}</th>
-          <!-- <th scope="row">{{ forloop.counter }}</th> -->
+          <th scope="row" data-label="#">{{ forloop.counter }}</th>
+          <!-- <th scope="row" data-label="#">{{ pago.id }}</th> -->
           <td data-label="Método">{{ pago.metodo }}</td>
           <td data-label="Estado">{{ pago.estado }}</td>
           <td data-label="Comprobante">

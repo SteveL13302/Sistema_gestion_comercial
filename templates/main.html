@@ -5,17 +5,21 @@
 {% block content %}
 <div class="producto">
     <h1 class="producto-titulo">Productos Disponibles</h1>
-
+    <p>Demuestrale tu amor regalandole uno de nuestros detalles <strong>Cariño</strong></p>
+    
     <!-- Filtro de Categorías con JavaScript -->
     <div id="filtro">
-        <button class="boton-categoria" data-categoria="">Todas las categorías</button>
+        <button class="boton-categoria filtro-categoria activo" data-categoria="">Todas las categorías</button>
         {% for cat in categorias %}
-        <button class="boton-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
+        <button class="boton-categoria filtro-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
         {% endfor %}
+        <a href="{% url 'pedido_crear' %}" class="nuevo-pedido"><i class="fa-solid fa-circle-plus"></i> Nuevo Pedido</a>
+    
     </div>
 
     <!-- Lista de Productos -->
     <ul id="lista-productos">
+        
         {% for producto in productos %}
         <li class="producto-item">
             <div class="producto-datos">
@@ -25,10 +29,6 @@
 
             <div class="producto-imagen">
                 <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-            </div>
-
-            <div class="producto-opciones">
-                <a class="button" href="{% url 'pedido_crear' %}">Realizar Pedido</a>
             </div>
         </li>
 

@@ -5,12 +5,13 @@
 {% block content %}
 <div class="producto">
     <h1 class="producto-titulo">Productos Disponibles</h1>
-
+    <p>Demuestrale tu amor regalandole uno de nuestros detalles <strong>Cariño</strong></p>
+    
     <!-- Filtro de Categorías con JavaScript -->
     <div id="filtro">
-        <button class="boton-categoria" data-categoria="">Todas las categorías</button>
+        <button class="boton-categoria filtro-categoria activo" data-categoria="">Todas las categorías</button>
         {% for cat in categorias %}
-        <button class="boton-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
+        <button class="boton-categoria filtro-categoria" data-categoria="{{ cat }}">{{ cat }}</button>
         {% endfor %}
     </div>
 
@@ -28,7 +29,7 @@
             </div>
 
             <div class="producto-opciones">
-                <a class="button" href="{% url 'agregar_pedido' id_pedido producto.id %}">Agregar Pedido</a>
+                <a class="button" href="{% url 'agregar_pedido' id_pedido producto.id %}">Agregar</a>
             </div>
         </li>
         {% endfor %}

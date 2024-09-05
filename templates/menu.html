@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>{% block title %}Detalles Cariño{% endblock %}</title>
   <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   {% load static %}
   <link rel="stylesheet" href="{% static 'sweetalert2/sweetalert2.min.css' %}">
@@ -39,52 +40,60 @@
         </li>
 
         {% if user.is_authenticated %}
-        {% if cliente.id %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'clientes' cliente.id %}">
-            <i class="fas fa-user"></i> Cuenta
-          </a>
-        </li>
+        
+            {% if cliente.id and not user.is_staff%}
+            <!-- cuenta  -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'clientes' cliente.id %}">
+                <i class="fas fa-user"></i> Cuenta
+              </a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'pedidos2' cliente.id %}">
-            <i class="fas fa-list"></i> Pedidos
-          </a>
-        </li>
+            <!-- pedidos  -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pedidos2' cliente.id %}">
+                <i class="fas fa-list"></i> Pedidos
+              </a>
+            </li>
 
-        {% if user.is_staff %}
-        <h5>--- Administrar ---</h5>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'pedidos' %}">
-            <i class="fas fa-list"></i> Pedidos
-          </a>
-        </li>
+            <!-- destinatarios -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'destinatarios' %}">
+                <i class="fas fa-users"></i> Destinatarios
+              </a>
+            </li>
+            {% endif %}
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'destinatarios' %}">
-            <i class="fas fa-users"></i> Destinatarios
-          </a>
-        </li>
+            {% if user.is_staff %}
+            <!-- pedidos  -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pedidos' %}">
+                <i class="fas fa-list"></i> Pedidos
+              </a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'pagos' %}">
-            <i class="fas fa-dollar"></i> Pagos
-          </a>
-        </li>
+            <!-- pagos  -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pagos' %}">
+                <i class="fas fa-dollar"></i> Pagos
+              </a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'productos' %}">
-            <i class="fas fa-box"></i> Productos
-          </a>
-        </li>
-        {% endif %}
-
+            <!-- productos  -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'productos' %}">
+                <i class="fas fa-box"></i> Productos
+              </a>
+            </li>
+            {% endif %}
+        
+        <!-- cerrar sesion  -->
         <li class="nav-item">
           <a class="nav-link" href="{% url 'account_logout' %}">
             <i class="fas fa-sign-out-alt"></i> Cerrar sesión
           </a>
         </li>
-        {% endif %}
+        
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'account_login' %}">
