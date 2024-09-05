@@ -43,7 +43,7 @@ class ItemAdmin(admin.ModelAdmin):
 
 @admin.register(Destinatario)
 class DestinatarioAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nombre', 'telefono', 'ciudad', 'direccion')
+    list_display = ('id', 'nombre', 'telefono', 'ciudad', 'direccion', 'user')
 
 @admin.register(Pago)
 class PagoAdmin(admin.ModelAdmin):

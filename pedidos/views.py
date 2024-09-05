@@ -320,25 +320,33 @@ def eliminar_item(request, item_id, producto_id):
 
 # DESTINATARIO
 def destinatarios(request):
-    destinatarios = Destinatario.objects.all()
+    destinatarios = Destinatario.objects.filter(user_id = request.user.id)
     contenido = {
         'destinatarios': destinatarios,
         'cliente': request.cliente  # Llama al cliente del middleware
     }
     return render(request, 'destinatarios/listado.html', contenido)
 
-def nuevo_destinatario(request):
+def nuevo_destinatario(request, pedido_id):
     mensaje_error = ""
+    
+    # Obtener el valor del parámetro desde la URL (por ejemplo, 'pedido_id')
     
     if request.method == "POST":
         formulario = DestinatarioForm(request.POST)
         if formulario.is_valid():
             destinatario = formulario.save()
-            return redirect('destinatarios')
+            if pedido_id:
+                return redirect(f'http://127.0.0.1:8000/pedidos/registrar/destinatario/{pedido_id}')
+            else:     
+                return redirect('destinatarios')
         else:
             mensaje_error = formulario.errors.as_text()
     else:
         formulario = DestinatarioForm()
+
+    # Si el parámetro existe, redirige a la URL deseada
+   
 
     contenido = {
         'cliente': request.cliente  # Llama al cliente del middleware
@@ -648,15 +656,33 @@ def agregar_pedido_items(request, pedido_id, producto_id):
                     detalle=nuevo_detalle  # Asociar con el detalle recién creado
                 )
 
+                contenido = {
+                    'cliente': request.cliente  #llamo al cliente del middleware
+                }
+
             except ValueError as e:
                 print(f"Error en el procesamiento del item {item_id}: {e}")  # Depuración
                 continue
 
-        return redirect(reverse('pedido_items_finalizar', args=[pedido_id]))
+        return redirect(reverse('pedido_items_finalizar_destinatario', args=[pedido_id]))
     else:
         return HttpResponse('Método no permitido', status=405)
 
-def pedido_items_finalizar(request, pedido_id):
+def pedido_items_finalizar_destinatario(request, pedido_id):
+    # formulario_destinatario = DestinatarioForm()
+    # formulario_destinatario.objects.filter(user_id = request.user.id)
+    formulario = PedidoForm()
+    formulario_destinatario = DestinatarioForm()
+
+    contenido_final = {
+        'formulario': formulario,
+        'formulario_destinatario': formulario_destinatario,
+        'cliente': request.cliente ,
+        'pedido_id': pedido_id,
+    }
+    return render(request, 'pedidos/destinatario.html', contenido_final)
+
+def pedido_items_finalizar_pago(request, pedido_id):
     formulario = PedidoForm()
     formulario_pago = PagoForm()
     formulario_destinatario = DestinatarioForm()
@@ -664,9 +690,11 @@ def pedido_items_finalizar(request, pedido_id):
     contenido_final = {
         'formulario': formulario,
         'formulario_pago': formulario_pago,
-        'formulario_destinatario': formulario_destinatario
+        'formulario_destinatario': formulario_destinatario,
+        'pedido_id': pedido_id,
+        'cliente': request.cliente 
     }
-    return render(request, 'pedidos/finalizar.html', contenido_final)
+    return render(request, 'pedidos/pago.html', contenido_final)
 
 # DETALLE      
 def nueva_personalizacion(request):

@@ -66,7 +66,7 @@ class PagoForm(forms.ModelForm):
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['pago', 'destinatario']
+        fields = ['destinatario']
         widgets = {
             'estado': forms.Select(attrs={'class': 'form-control'}),
             'cliente': forms.Select(attrs={'class': 'form-control'}),

@@ -57,6 +57,7 @@ class Destinatario(models.Model):
     telefono = models.CharField(max_length=10)
     ciudad = models.CharField(max_length=30)
     direccion = models.TextField(max_length=200)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.nombre}, {self.direccion}"
