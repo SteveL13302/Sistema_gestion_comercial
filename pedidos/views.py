@@ -410,12 +410,12 @@ def nuevo_pago(request, pedido_id):
 
     print(pedido_id)
     if request.method == 'POST':
-        form = PagoPedidoForm(request.POST, request.FILES, instance=pedido)
+        form = PagoForm(request.POST, request.FILES, instance=pedido)
         if form.is_valid():
             form.save()
             return redirect('pedidos2', request.cliente.id)  # Redirige a la lista de pedidos después de guardar
     else:
-        form = PagoPedidoForm(instance=pedido)
+        form = PagoForm(instance=pedido)
 
     # Combina el contexto del formulario con el cliente y el pedido_id
     contenido_final = {
@@ -578,9 +578,6 @@ def detalle_pedido(request, pedido_id):
 
 def editar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
-
-    print(f"Pedido PEDIDO: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa {pedido_id}")
-    print(f"Pedido PEDIDO: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2 {pedido}")
     
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
@@ -748,6 +745,32 @@ def nueva_personalizacion(request):
     return render(request, 'nueva_personalizacion.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
 #CORREO
+def aaaaa(request):
+    if request.method == "POST":
+        formulario = EmailForm(request.POST)
+        if formulario.is_valid():
+            # Obtener los datos del formulario
+            destinatario = formulario.cleaned_data['destinatario']
+            asunto = formulario.cleaned_data['asunto']
+            mensaje = formulario.cleaned_data['mensaje']
+
+            # Configurar el envío del correo
+            send_mail(
+                asunto,  # Asunto del correo
+                mensaje,  # Mensaje
+                settings.EMAIL_HOST_USER,  # Remitente
+                [destinatario],  # Destinatario proporcionado por el usuario
+                fail_silently=False,
+            )
+
+            # Redireccionar después de enviar el correo
+            return redirect('correo_enviado')
+    else:
+        formulario = EmailForm()
+
+    # Renderizar el formulario
+    return render(request, 'enviar_correo.html', {'formulario': formulario, 'cliente': request.cliente})
+
 def enviar_correo(request):
     if request.method == "POST":
         formulario = EmailForm(request.POST)
@@ -772,7 +795,7 @@ def enviar_correo(request):
         formulario = EmailForm()
 
     # Renderizar el formulario
-    return render(request, 'enviar_correo.html', {'formulario': formulario})
+    return render(request, 'enviar_correo.html', {'formulario':formulario})
 
 #def anadir_producto_pedido(request):
 #     producto_id = request.GET.get('producto_id', '')

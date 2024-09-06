@@ -146,9 +146,10 @@ ACCOUNT_SIGNUP_REDIRECT_URL = '/cliente/nuevo'
 #     'allauth.account.auth_backends.AuthenticationBackend',
 # ]
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'tu_correo@gmail.com'
-# EMAIL_HOST_PASSWORD = 'tu_contraseña_de_aplicación'
+# Configuracion de email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER ='stevenesparza36@gmail.com'
+EMAIL_HOST_PASSWORD ='zdoi lvss ihzb uwrd'

@@ -73,8 +73,8 @@ urlpatterns = [
     #path('anadir_producto_pedido/', anadir_producto_pedido, name='anadir_producto_pedido'),    #Agregar
 
     #Correo
-    path('enviar-correo/', enviar_correo, name='enviar_correo'),
-    path('correo-enviado/', lambda request: render(request, 'correo_enviado.html'), name='correo_enviado'),
+    path('enviar-correo', enviar_correo, name='enviar_correo'),
+    path('correo-enviado', lambda request: render(request, 'correo_enviado.html'), name='correo_enviado'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
