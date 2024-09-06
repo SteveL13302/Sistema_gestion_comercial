@@ -249,7 +249,8 @@ def detalle_item(request, item_id):
     formulario = ItemForm(instance=item)
     contenido = {
         'formulario': formulario,
-        'item': item 
+        'item': item,
+        'cliente': request.cliente
     }
 
     return render(request, 'items/editar.html', contenido)
@@ -330,12 +331,14 @@ def destinatarios(request):
 def nuevo_destinatario(request, pedido_id):
     mensaje_error = ""
     
-    # Obtener el valor del parámetro desde la URL (por ejemplo, 'pedido_id')
-    
     if request.method == "POST":
         formulario = DestinatarioForm(request.POST)
         if formulario.is_valid():
-            destinatario = formulario.save()
+            destinatario = formulario.save(commit=False)  # No guardamos todavía
+            destinatario.user = request.user  # Asignamos el usuario actual
+            destinatario.save()  # Ahora guardamos el destinatario
+            
+            # Redirigir a la URL deseada
             if pedido_id:
                 return redirect(f'http://127.0.0.1:8000/pedidos/registrar/destinatario/{pedido_id}')
             else:     
@@ -345,20 +348,14 @@ def nuevo_destinatario(request, pedido_id):
     else:
         formulario = DestinatarioForm()
 
-    # Si el parámetro existe, redirige a la URL deseada
-   
-
+    # Preparar el contenido para renderizar la plantilla
     contenido = {
-        'cliente': request.cliente  # Llama al cliente del middleware
-    }
-    
-    contenido_final = {
+        'cliente': request.cliente,  # Llama al cliente del middleware
         'formulario': formulario,
         'mensaje_error': mensaje_error,
-        **contenido
     }
     
-    return render(request, 'destinatarios/registrar.html', contenido_final)
+    return render(request, 'destinatarios/registrar.html', contenido)
 
 def eliminar_destinatario(request, destinatario_id):
     destinatario = get_object_or_404(Destinatario, id=destinatario_id)
@@ -669,18 +666,22 @@ def agregar_pedido_items(request, pedido_id, producto_id):
         return HttpResponse('Método no permitido', status=405)
 
 def pedido_items_finalizar_destinatario(request, pedido_id):
-    # formulario_destinatario = DestinatarioForm()
-    # formulario_destinatario.objects.filter(user_id = request.user.id)
+    destinatarios = Destinatario.objects.filter(user_id=request.user.id)
+    print(destinatarios)  # Agrega esta línea para verificar el queryset
+
     formulario = PedidoForm()
+    formulario.fields['destinatario'].queryset = destinatarios
     formulario_destinatario = DestinatarioForm()
 
     contenido_final = {
         'formulario': formulario,
         'formulario_destinatario': formulario_destinatario,
-        'cliente': request.cliente ,
+        'cliente': request.cliente,
         'pedido_id': pedido_id,
     }
+
     return render(request, 'pedidos/destinatario.html', contenido_final)
+
 
 def pedido_items_finalizar_pago(request, pedido_id):
     formulario = PedidoForm()

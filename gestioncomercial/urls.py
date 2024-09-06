@@ -42,7 +42,7 @@ urlpatterns = [
     
     #Destinatarios
     path('destinatarios/nuevo', nuevo_destinatario, name='nuevo_destinatario'),                                     #Registrar
-    path('destinatarios/nuevo/<int:pedido_id>/', nuevo_destinatario, name='nuevo_destinatario_con_pedido'),
+    path('destinatarios/nuevo/<int:pedido_id>/', nuevo_destinatario, name='nuevo_destinatario'),
     path('destinatarios', destinatarios, name='destinatarios'),                                                     #Consultar
     path('destinatarios/eliminar/<int:destinatario_id>', eliminar_destinatario, name='eliminar_destinatario'),      #Eliminar
     path('destinatarios/editar/<int:destinatario_id>', detalle_destinatario, name='detalle_destinatario'),          #Cargar Datos

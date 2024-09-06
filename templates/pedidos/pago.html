@@ -50,7 +50,7 @@
     <div id="formulario-destinatario" style="display: none;">
       <h1>Nuevo Destinatario</h1>
       <hr>
-      <form method="post" action="{% url 'nuevo_destinatario_con_pedido' pedido_id=pedido_id %}">
+      <form method="post" action="{% url 'nuevo_destinatario' pedido_id=pedido_id %}">
         {% csrf_token %}
         {{ formulario_destinatario.as_p }}
         <input type="submit" value="Guardar" class="btn btn-primary">
