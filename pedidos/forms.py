@@ -1,4 +1,3 @@
-
 from django import forms
 from .models import Cliente, Producto, Item, Destinatario, Pago, Pedido, Detalle, Personalizacion
 
@@ -53,7 +52,39 @@ class DestinatarioForm(forms.ModelForm):
             'direccion': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ej: Dirección completa'}),
         }
 
+class DestinatarioPedidoForm(forms.ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ['destinatario']
+        widgets = {
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+            'cliente': forms.Select(attrs={'class': 'form-control'}),
+            'pago': forms.Select(attrs={'class': 'form-control'}),
+            'destinatario': forms.Select(attrs={'class': 'form-control'}),
+        }
+
 class PagoForm(forms.ModelForm):
+    class Meta:
+        model = Pago
+        fields = ['metodo', 'comprobante']
+        widgets = {
+            'metodo': forms.Select(attrs={'class': 'form-control'}),
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+            'comprobante': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+class PagoPedidoForm(forms.ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ['pago']
+        widgets = {
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+            'cliente': forms.Select(attrs={'class': 'form-control'}),
+            'pago': forms.Select(attrs={'class': 'form-control'}),
+            'destinatario': forms.Select(attrs={'class': 'form-control'}),
+        }
+        
+class PagoFormEmpleado(forms.ModelForm):
     class Meta:
         model = Pago
         fields = ['metodo', 'estado', 'comprobante']
@@ -66,7 +97,7 @@ class PagoForm(forms.ModelForm):
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = ['destinatario']
+        fields = ['estado', 'cliente', 'pago', 'destinatario']
         widgets = {
             'estado': forms.Select(attrs={'class': 'form-control'}),
             'cliente': forms.Select(attrs={'class': 'form-control'}),

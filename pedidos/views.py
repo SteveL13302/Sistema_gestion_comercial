@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago, Personalizacion
-from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioForm, PagoForm, PedidoForm
+from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioPedidoForm, DestinatarioForm, PagoForm, PedidoForm, EmailForm, PagoPedidoForm
 
 # MENU      
 # def menu(request): 
@@ -340,7 +340,7 @@ def nuevo_destinatario(request, pedido_id):
             
             # Redirigir a la URL deseada
             if pedido_id:
-                return redirect(f'http://127.0.0.1:8000/pedidos/registrar/destinatario/{pedido_id}')
+                return redirect('pedido_items_finalizar_destinatario', pedido_id)
             else:     
                 return redirect('destinatarios')
         else:
@@ -405,32 +405,26 @@ def pagos(request):
     }
     return render(request, 'pagos/listado.html', contenido)
 
-def nuevo_pago(request):
-    mensaje_error = ""
-    
-    if request.method == "POST":
-        formulario = PagoForm(request.POST, request.FILES)
-        if formulario.is_valid():
-            pago = formulario.save(commit=False)
-            pago.comprobante = 'comprobantes/comprobante-default.jpg'
-            pago.save()
-            return redirect('pagos')
-        else:
-            mensaje_error = formulario.errors.as_text()
-    else:
-        formulario = PagoForm()
+def nuevo_pago(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
 
-    contenido = {
-        'cliente': request.cliente  # Llama al cliente del middleware
-    }
-    
+    print(pedido_id)
+    if request.method == 'POST':
+        form = PagoPedidoForm(request.POST, request.FILES, instance=pedido)
+        if form.is_valid():
+            form.save()
+            return redirect('pedidos2', request.cliente.id)  # Redirige a la lista de pedidos después de guardar
+    else:
+        form = PagoPedidoForm(instance=pedido)
+
+    # Combina el contexto del formulario con el cliente y el pedido_id
     contenido_final = {
-        'formulario': formulario,
-        'mensaje_error': mensaje_error,
-        **contenido
+        'formulario': form,
+        'cliente': request.cliente,  # Incluye el cliente del middleware
+        'pedido_id': pedido_id       # Asegúrate de pasar el pedido_id al contexto
     }
     
-    return render(request, 'pagos/registrar.html', contenido_final)
+    return render(request, 'pedidos/destinatario.html', contenido_final)
 
 def eliminar_pago(request, pago_id):
     pago = get_object_or_404(Pago, id=pago_id)
@@ -526,6 +520,22 @@ def pedido_crear(request):
     # Redirige a la lista de productos con el ID del pedido recién creado
     return redirect('productos_lista', pedido.id)
 
+def pedido_actualizar_destinatario(request):
+    cliente_id = request.session.get('user_id')
+    print(f"Cliente ID desde la sesión: {cliente_id}")
+
+    if not cliente_id:
+        return HttpResponseRedirect('/')  
+    
+    # Crea el pedido con estado "carrito" y el cliente autenticado
+    pedido = Pedido.objects.create(
+        estado="carrito",
+        cliente_id=request.cliente.id
+    )
+
+    # Redirige a la lista de productos con el ID del pedido recién creado
+    return redirect('productos_lista', pedido.id)
+
 def productos_lista(request, pedido_id):
     categoria = request.GET.get('categoria', '')
     
@@ -568,6 +578,9 @@ def detalle_pedido(request, pedido_id):
 
 def editar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
+
+    print(f"Pedido PEDIDO: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa {pedido_id}")
+    print(f"Pedido PEDIDO: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2 {pedido}")
     
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
@@ -584,6 +597,25 @@ def editar_pedido(request, pedido_id):
     }
     
     return render(request, 'pedidos/editar.html', contenido_final)
+
+def editar_pedido_destinatario(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    if request.method == 'POST':
+        form = DestinatarioPedidoForm(request.POST, instance=pedido)
+        if form.is_valid():
+            form.save()
+            return redirect('pedido_items_finalizar_pago', pedido_id)
+    else:
+        form = DestinatarioPedidoForm(instance=pedido)
+
+    # Combina el contexto del formulario con el cliente y el pedido_id
+    contenido_final = {
+        'formulario': form,
+        'cliente': request.cliente,  # Incluye el cliente del middleware
+        'pedido_id': pedido_id       # Asegúrate de pasar el pedido_id al contexto
+    }
+    
+    return render(request, 'pedidos/pago.html', contenido_final)
 
 def agregar_pedido(request, pedido_id, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
@@ -669,7 +701,7 @@ def pedido_items_finalizar_destinatario(request, pedido_id):
     destinatarios = Destinatario.objects.filter(user_id=request.user.id)
     print(destinatarios)  # Agrega esta línea para verificar el queryset
 
-    formulario = PedidoForm()
+    formulario = DestinatarioPedidoForm()
     formulario.fields['destinatario'].queryset = destinatarios
     formulario_destinatario = DestinatarioForm()
 
