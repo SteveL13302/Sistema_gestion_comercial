@@ -35,7 +35,7 @@ class Producto(models.Model):
         return f"{self.nombre}"
 
 class Item(models.Model):
-    OPC_PRODUCTO = [("base", "Producto Base"), ("extra", "Personalización")]
+    OPC_PRODUCTO = [("principal", "Principal"), ("alternativo", "Alternativo")]
 
     nombre = models.CharField(max_length=50)
     imagen = models.ImageField(upload_to='items/', null=True, blank=True)
@@ -62,8 +62,8 @@ class Destinatario(models.Model):
         return f"{self.nombre}, {self.direccion}"
 
 class Pago(models.Model):
-    OPC_METODO = [("transferencia", "Transferencia"),("tarjeta", "Tarjeta")]
-    OPC_ESTADO_PAGO = [("pagado", "Pagado"),("validadando", "Validadando")]
+    OPC_METODO = [("transferencia", "Transferencia"),("deposito", "Deposito")]
+    OPC_ESTADO_PAGO = [("pagado", "Pagado"),("validando", "Validando")]
 
     metodo = models.CharField(max_length=50, choices=OPC_METODO)
     estado = models.CharField(max_length=50, choices=OPC_ESTADO_PAGO, default="validadando")
@@ -108,10 +108,10 @@ class Detalle(models.Model):
         return f"{self.nombre}"
 
 class Personalizacion(models.Model):
-    OPC_DETALLE = [("base", "Producto Base"), ("extra", "Personalización")]
+    OPC_DETALLE = [("principal", "Principal"), ("alternativo", "Alternativo")]
 
     nombre = models.CharField(max_length=50)
-    imagen = models.ImageField(upload_to='items/', default='productos/producto-default.jpg' , null=True, blank=True)  # Quitar para que se suba el archivo // llamar a la imagen directa del producto
+    imagen = models.ImageField(upload_to='items/', null=True, blank=True)
     precio_individual = models.DecimalField(max_digits=10, decimal_places=2)
     cantidad = models.IntegerField(default=1)
     total = models.DecimalField(max_digits=10, decimal_places=2)

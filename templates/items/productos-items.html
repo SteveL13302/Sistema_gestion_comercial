@@ -30,20 +30,41 @@
                     <td>{{ producto.categoria }}</td>
                 </tr>
             </table>
+            <p>Personalizaciones: {{ personalizacion }}</p>
 
             <h5>Incluye:</h5>
             <table>
-                {% for personalizacion in personalizaciones %}
-                <tr>
-                    <td>
-                        <i class="fas fa-check"></i> {{ personalizacion.nombre }}
-                    </td>
-                </tr>
-                {% endfor %}
+                {% if personalizaciones %}
+                    {% for personalizacion in personalizaciones %}
+                    <tr>
+                        <td>
+                            <i class="fas fa-check"></i> {{ personalizacion.nombre }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>
+                            <i class="fas fa-exclamation-triangle"></i> Aún no has agregado los elementos principales del producto.
+                        </td>
+                    </tr>
+                {% endif %}
             </table>
+            
+
+            <!-- Nuevo destinatario  -->
+            <div class="text-center">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" onclick="mostrarFormulario('items')">
+                        <i class="fa-solid fa-circle-plus"></i> Agregar Items
+                    </button>
+
+                    <a class="btn btn-primary" href="{% url 'productos' %}"><i class="fa-solid fa-save"></i> Guardar</a>
+                </div>
+            </div>            
 
             <!-- Formulario de personalización -->
-            <div id="form-personalizacion" class="form-personalizacion">
+            <div id="form-personalizacion" style="display: none;" class="form-personalizacion">
                 <form method="post" action="{% url 'nuevo_item' producto.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ formulario.as_p }}
@@ -85,7 +106,7 @@
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
                 </form>
-                <!-- <a href="{% url 'info_producto' producto.id %}" class="btn btn-secondary btn-sm">items</a> -->
+                <!-- <a href="{% url 'productos_items' producto.id %}" class="btn btn-secondary btn-sm">items</a> -->
             </td>
         </tr>
         {% endfor %}
@@ -126,5 +147,11 @@
     //     }
     // });
 </script>
+
+<script>
+    function mostrarFormulario(tipo) {
+      document.getElementById('form-personalizacion').style.display = 'block';
+    }
+  </script>
 
 {% endblock %}

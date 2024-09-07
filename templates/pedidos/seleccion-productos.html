@@ -4,215 +4,231 @@
 
 {% block content %}
 
-    <!-- Info productos  -->
-    <div class="info-producto">
-        <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
+<!-- Info productos  -->
+<div class="info-producto">
+    <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
 
-        <div class="producto-contenido">
-            <!-- Imagen -->
-            <div class="img">
-                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-            </div>
-
-            <!-- Detalles -->
-            <div class="info">
-                <table>
-                    <tr>
-                        <td><strong>Descripción:</strong></td>
-                        <td>{{ producto.descripcion }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precio base:</strong></td>
-                        <td>{{ producto.precio_base }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Categoría:</strong></td>
-                        <td>{{ producto.categoria }}</td>
-                    </tr>
-                </table>
-
-                <h5>Incluye:</h5>
-                <table>
-                    {% for personalizacion in personalizaciones %}
-                    <tr>
-                        <td>
-                            <i class="fas fa-check"></i> {{ personalizacion.nombre }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
+    <div class="producto-contenido">
+        <!-- Imagen -->
+        <div class="img">
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
         </div>
-    </div>
 
-    <!-- Tabla de productos (simplificada) -->
-    <h2 class="m-4 mb-4 text-center">Items Agregados</h2>
-    <h3 class="mt-4">Total Seleccionado: <span id="totalSeleccionado">0.00</span></h3>
-
-    <form id="agregarPedidoForm" method="post" action="{% url 'agregar_pedido_items' pedido_id producto.id %}">
-        {% csrf_token %}
-    
-        <h3>Selecciona los items para agregar al pedido:</h3>
-        <table class="table">
-            <thead>
+        <!-- Detalles -->
+        <div class="info">
+            <table>
                 <tr>
-                    <th scope="col">Seleccionar</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Total</th>
+                    <td><strong>Descripción:</strong></td>
+                    <td>{{ producto.descripcion }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
                 <tr>
-                    <td data-label="Seleccionar:">
-                        <input type="checkbox" class="item-check" name="items" value="{{ item.id }}" data-precio="{{ item.precio }}">
-                    </td>
-                    <td data-label="Nombre">{{ item.nombre }}</td>
-                    <td class="Precio" data-label="Precio">{{ item.precio }}</td>
-                    <td data-label="Tipo">{{ item.tipo }}</td>
+                    <td><strong>Precio base:</strong></td>
+                    <td>{{ producto.precio_base }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Categoría:</strong></td>
+                    <td>{{ producto.categoria }}</td>
+                </tr>
+            </table>
+
+            <h5>Incluye:</h5>
+            <table>
+                {% for personalizacion in personalizaciones %}
+                <tr>
                     <td>
-                        <input type="number" name="cantidades" value="1" min="1" class="form-control cantidad">
+                        <i class="fas fa-check"></i> {{ personalizacion.nombre }}
                     </td>
-                    <td data-label="Total - Item(s)">
-                        <span class="total">{{ item.precio|floatformat:2 }}</span>
-                    </td>
-                    
-                    <!-- Agregando inputs hidden para enviar los demás datos al backend -->
-                    <input type="hidden" name="nombre_{{ item.id }}" value="{{ item.nombre }}">
-                    <input type="hidden" name="precio_{{ item.id }}" value="{{ item.precio }}">
-                    <input type="hidden" name="tipo_{{ item.id }}" value="{{ item.tipo }}">
                 </tr>
                 {% endfor %}
-            </tbody>
-        </table>
-    
-        <button type="submit" class="btn btn-primary">Agregar al Pedido</button>
-    </form>
+            </table>
+        </div>
+    </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const totalSeleccionadoSpan = document.getElementById('totalSeleccionado');
-            const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
-            const itemChecks = document.querySelectorAll('.item-check');
+<!-- Tabla de productos (simplificada) -->
+<h2 class="m-4 mb-4 text-center">Items Agregados</h2>
+<h3 class="mt-4">Total Seleccionado: <span id="totalSeleccionado">0.00</span></h3>
+
+<form id="agregarPedidoForm" method="post" action="{% url 'agregar_pedido_items' pedido_id producto.id %}">
+    {% csrf_token %}
     
-            function updateTotal() {
-                let total = 0;
-                cantidadInputs.forEach(input => {
-                    const itemId = input.dataset.itemId;
-                    const precio = parseFloat(input.dataset.precio);
-                    if (input.value > 0 && itemChecks.find(check => check.value === itemId && check.checked)) {
-                        total += precio * parseInt(input.value, 10);
-                    }
-                });
-                totalSeleccionadoSpan.textContent = total.toFixed(2);
+    <h3>Selecciona los items para agregar al pedido:</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Seleccionar</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td data-label="Seleccionar:">
+                    <input type="checkbox" class="item-check" name="items" value="{{ item.id }}" data-precio="{{ item.precio }}">
+                </td>
+                <td data-label="Nombre">{{ item.nombre }}</td>
+                <td class="Precio" data-label="Precio">{{ item.precio }}</td>
+                <td data-label="Tipo">{{ item.tipo }}</td>
+                <td>
+                    <input type="number" name="cantidad_{{ item.id }}" value="1" min="1" class="form-control cantidad" data-precio="{{ item.precio }}">
+                </td>
+                <td data-label="Total - Item(s)">
+                    <span class="total-item" data-precio="{{ item.precio }}" data-cantidad="1">{{ item.precio|floatformat:2 }}</span>
+                </td>
+                
+                <!-- Agregando inputs hidden para enviar los demás datos al backend -->
+                <input type="hidden" name="nombre_{{ item.id }}" value="{{ item.nombre }}">
+                <input type="hidden" name="precio_{{ item.id }}" value="{{ item.precio }}">
+                <input type="hidden" name="tipo_{{ item.id }}" value="{{ item.tipo }}">
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Agregar al Pedido</button>
+</form>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const totalSeleccionadoSpan = document.getElementById('totalSeleccionado');
+    const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
+    const itemChecks = document.querySelectorAll('.item-check');
+
+    function updateTotal() {
+        let total = 0;
+
+        itemChecks.forEach(check => {
+            if (check.checked) {
+                const itemId = check.value;
+                const precio = parseFloat(check.dataset.precio);
+                const cantidadInput = document.querySelector(`input[name="cantidad_${itemId}"]`);
+                const cantidad = parseInt(cantidadInput.value, 10);
+
+                // Actualizar el total del item
+                const totalItemSpan = document.querySelector(`.total-item[data-precio="${precio}"]`);
+                if (totalItemSpan) {
+                    totalItemSpan.textContent = (precio * cantidad).toFixed(2);
+                }
+
+                // Acumulación del total
+                total += precio * cantidad;
             }
-    
-            cantidadInputs.forEach(input => {
-                input.addEventListener('input', updateTotal);
-            });
-    
-            itemChecks.forEach(check => {
-                check.addEventListener('change', updateTotal);
-            });
-    
-            // Inicializar el total al cargar la página
-            updateTotal();
         });
-    </script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var cantidadInputs = document.querySelectorAll('.cantidad');
-            var itemChecks = document.querySelectorAll('.item-check');
-            var totalSeleccionadoSpan = document.getElementById('totalSeleccionado');
 
-            function calcularTotal(input) {
-                var precio = parseFloat(input.getAttribute('data-precio'));
-                var cantidad = parseFloat(input.value);
-                var total = precio * cantidad;
-                return total.toFixed(2);
-            }
+        // Actualizar el total seleccionado
+        totalSeleccionadoSpan.textContent = total.toFixed(2);
+    }
 
-            function actualizarTotalSeleccionado() {
-                var totalSeleccionado = 0;
-                itemChecks.forEach(function (check) {
-                    if (check.checked) {
-                        var cantidadInput = document.querySelector('.cantidad[data-item-id="' + check.getAttribute('data-item-id') + '"]');
-                        var totalItem = parseFloat(calcularTotal(cantidadInput));
-                        totalSeleccionado += totalItem;
-                    }
-                });
-                totalSeleccionadoSpan.textContent = totalSeleccionado.toFixed(2);
-            }
+    cantidadInputs.forEach(input => {
+        input.addEventListener('input', updateTotal);
+    });
 
-            cantidadInputs.forEach(function (input) {
-                input.addEventListener('input', function () {
-                    var totalSpan = this.closest('tr').querySelector('.total');
-                    totalSpan.textContent = calcularTotal(this);
-                    actualizarTotalSeleccionado();
-                });
-            });
+    itemChecks.forEach(check => {
+        check.addEventListener('change', updateTotal);
+    });
 
+    // Inicializar el total al cargar la página
+    updateTotal();
+});
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var cantidadInputs = document.querySelectorAll('.cantidad');
+        var itemChecks = document.querySelectorAll('.item-check');
+        var totalSeleccionadoSpan = document.getElementById('totalSeleccionado');
+
+        function calcularTotal(input) {
+            var precio = parseFloat(input.getAttribute('data-precio'));
+            var cantidad = parseFloat(input.value);
+            var total = precio * cantidad;
+            return total.toFixed(2);
+        }
+
+        function actualizarTotalSeleccionado() {
+            var totalSeleccionado = 0;
             itemChecks.forEach(function (check) {
-                check.addEventListener('change', function () {
-                    actualizarTotalSeleccionado();
-                });
+                if (check.checked) {
+                    var cantidadInput = document.querySelector('.cantidad[data-item-id="' + check.getAttribute('data-item-id') + '"]');
+                    var totalItem = parseFloat(calcularTotal(cantidadInput));
+                    totalSeleccionado += totalItem;
+                }
+            });
+            totalSeleccionadoSpan.textContent = totalSeleccionado.toFixed(2);
+        }
+
+        cantidadInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                var totalSpan = this.closest('tr').querySelector('.total');
+                totalSpan.textContent = calcularTotal(this);
+                actualizarTotalSeleccionado();
             });
         });
-    </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var cantidadInputs = document.querySelectorAll('.cantidad');
-
-            function calcularTotal(input) {
-                var precio = parseFloat(input.getAttribute('data-precio'));
-                var cantidad = parseFloat(input.value);
-                var total = precio * cantidad;
-                return total.toFixed(2);
-            }
-
-            cantidadInputs.forEach(function (input) {
-                input.addEventListener('input', function () {
-                    var totalSpan = this.closest('tr').querySelector('.total');
-                    totalSpan.textContent = calcularTotal(this);
-                });
+        itemChecks.forEach(function (check) {
+            check.addEventListener('change', function () {
+                actualizarTotalSeleccionado();
             });
         });
-    </script>
+    });
+</script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('agregarPedidoForm');
-            const totalSeleccionadoSpan = document.getElementById('totalSeleccionado');
-            const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
-            const itemChecks = document.querySelectorAll('.item-check');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var cantidadInputs = document.querySelectorAll('.cantidad');
 
-            function updateTotal() {
-                let total = 0;
-                cantidadInputs.forEach(input => {
-                    if (input.value > 0 && itemChecks.find(check => check.value === input.dataset.itemId && check.checked)) {
-                        const precio = parseFloat(input.dataset.precio);
-                        total += precio * parseInt(input.value, 10);
-                    }
-                });
-                totalSeleccionadoSpan.textContent = total.toFixed(2);
-            }
+        function calcularTotal(input) {
+            var precio = parseFloat(input.getAttribute('data-precio'));
+            var cantidad = parseFloat(input.value);
+            var total = precio * cantidad;
+            return total.toFixed(2);
+        }
 
+        cantidadInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                var totalSpan = this.closest('tr').querySelector('.total');
+                totalSpan.textContent = calcularTotal(this);
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('agregarPedidoForm');
+        const totalSeleccionadoSpan = document.getElementById('totalSeleccionado');
+        const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
+        const itemChecks = document.querySelectorAll('.item-check');
+
+        function updateTotal() {
+            let total = 0;
             cantidadInputs.forEach(input => {
-                input.addEventListener('input', updateTotal);
+                if (input.value > 0 && itemChecks.find(check => check.value === input.dataset.itemId && check.checked)) {
+                    const precio = parseFloat(input.dataset.precio);
+                    total += precio * parseInt(input.value, 10);
+                }
             });
+            totalSeleccionadoSpan.textContent = total.toFixed(2);
+        }
 
-            itemChecks.forEach(check => {
-                check.addEventListener('change', updateTotal);
-            });
-
-            // Inicializar el total al cargar la página
-            updateTotal();
+        cantidadInputs.forEach(input => {
+            input.addEventListener('input', updateTotal);
         });
-    </script>
+
+        itemChecks.forEach(check => {
+            check.addEventListener('change', updateTotal);
+        });
+
+        // Inicializar el total al cargar la página
+        updateTotal();
+    });
+</script>
 
 {% endblock %}

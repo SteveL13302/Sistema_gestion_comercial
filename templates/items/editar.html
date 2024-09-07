@@ -4,15 +4,34 @@
 
 {% block content %}
 
-<!-- Formulario de personalización -->
-<div id="form-personalizacion" class="form-personalizacion">
+<div class="frm_container">
+    <h1>Editar Item</h1>
+    <hr>
+
+    <!-- Formulario de personalización -->
     <form method="post" action="{% url 'editar_item' item.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{ formulario.as_p }}
         <input type="submit" value="Actualizar" class="btn btn-primary">
     </form>
+
     {% if mensaje_error %}
-    <p class="error">{{ mensaje_error }}</p>
+    <div class="alert alert-danger mt-3">
+        {{ mensaje_error }}
+    </div>
+    {% endif %}
+
+    {% if form.errors %}
+    <ul>
+        {% for field in form %}
+        {% for error in field.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
 </div>
 
