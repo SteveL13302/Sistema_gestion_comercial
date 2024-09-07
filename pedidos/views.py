@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import Http404
 
 from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago, Personalizacion
 from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioPedidoForm, DestinatarioForm, PagoForm, PedidoForm, EmailForm, PagoPedidoForm
@@ -48,11 +49,11 @@ def pedidos2(request, cliente_id):
     }
     return render(request, 'clientes/pedidos.html', contenido)
 
-#@login_required #Se puede validar que dependiendo el tipo de usuario se vea una cosa u otra
+@login_required #Se puede validar que dependiendo el tipo de usuario se vea una cosa u otra
 def clientes(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
-    # if cliente != request.user.cliente and not request.user.is_superuser:
-    #     return HttpResponse("No tienes acceso a esta cuenta")
+    if cliente != request.user.cliente and not request.user.is_superuser:
+         return HttpResponse("Sin acceso")
     
     pedidos = Pedido.objects.filter(cliente=cliente)
     contenido = {
@@ -60,6 +61,7 @@ def clientes(request, cliente_id):
         'pedidos': pedidos
     }
     return render(request, 'clientes/info_cliente.html', contenido)
+
 
 def nuevo_cliente(request):
     mensaje_error = ""
@@ -83,6 +85,7 @@ def nuevo_cliente(request):
     
     return render(request, 'clientes/registrar.html', {'formulario': formulario, 'mensaje_error': mensaje_error})
 
+@login_required
 def detalle_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
     formulario = ClienteForm(instance=cliente)
@@ -94,6 +97,8 @@ def detalle_cliente(request, cliente_id):
 
     return render(request, 'clientes/editar.html', contenido)
 
+
+@login_required
 def editar_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
     
@@ -116,6 +121,7 @@ def editar_cliente(request, cliente_id):
 
 
 # PRODUCTO  
+@staff_member_required
 def productos(request):
     productos = Producto.objects.all()
     contenido = {
@@ -123,6 +129,7 @@ def productos(request):
         'cliente': request.cliente  #llamo al cliente del middleware
     }
     return render(request, 'productos/listado.html', contenido)
+
 
 @staff_member_required
 def nuevo_producto(request):
@@ -161,6 +168,7 @@ def eliminar_producto(request, producto_id):
     # Si no es una solicitud POST, puedes redirigir o mostrar un error
     return HttpResponse("Método no permitido", status=405)
 
+@staff_member_required
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     formulario = ProductoForm(instance=producto)  # Cargar el formulario con los datos del producto
@@ -172,6 +180,7 @@ def detalle_producto(request, producto_id):
 
     return render(request, 'productos/editar.html', contenido)
 
+@staff_member_required
 def editar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     
@@ -191,6 +200,7 @@ def editar_producto(request, producto_id):
     
     return render(request, 'productos/editar.html', contenido_final)
 
+@staff_member_required
 def info_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     personalizaciones = producto.items.filter(tipo='base')
@@ -208,7 +218,8 @@ def info_producto(request, producto_id):
     }
     return render(request, 'items/info_productos.html', contenido)
 
-# ITEM      
+# ITEM   
+@staff_member_required   
 def items(request):
     items = Item.objects.all()
     contenido = {
@@ -320,6 +331,7 @@ def eliminar_item(request, item_id, producto_id):
 
 
 # DESTINATARIO
+@login_required
 def destinatarios(request):
     destinatarios = Destinatario.objects.filter(user_id = request.user.id)
     contenido = {
@@ -397,6 +409,7 @@ def editar_destinatario(request, destinatario_id):
 
 
 # PAGO
+@staff_member_required
 def pagos(request):
     pagos = Pago.objects.all()
     contenido = {
@@ -466,6 +479,7 @@ def editar_pago(request, pago_id):
 
 
 # Pedido
+@staff_member_required
 def pedidos(request):
     pedidos = Pedido.objects.all()
     productos = Producto.objects.all()
@@ -693,6 +707,7 @@ def agregar_pedido_items(request, pedido_id, producto_id):
         return redirect(reverse('pedido_items_finalizar_destinatario', args=[pedido_id]))
     else:
         return HttpResponse('Método no permitido', status=405)
+
 
 def pedido_items_finalizar_destinatario(request, pedido_id):
     destinatarios = Destinatario.objects.filter(user_id=request.user.id)
