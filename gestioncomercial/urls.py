@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from pedidos.views import pedidos2, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, productos_items, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, eliminar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items, detalle_item, editar_item, pedido_crear, productos_lista, pedido_destinatario_nuevo, pedido_pago_cargar, enviar_correo, pedido_destinatario_guardar
+from pedidos.views import pedidos2, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, productos_items, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, eliminar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items, detalle_item, editar_item, pedido_crear, productos_lista, pedido_destinatario_nuevo, pedido_pago_cargar, enviar_correo, pedido_destinatario_guardar, lista_productos
 from django.conf import settings
 from django.views.generic import RedirectView
 from django.conf.urls.static import static
@@ -63,6 +63,7 @@ urlpatterns = [
     path('pedidos/crear', pedido_crear, name='pedido_crear'),                                           #Registrar
     
     path('pedidos/listado/productos/<int:pedido_id>', productos_lista, name='productos_lista'),                                           #Registrar
+    path('pedidos/productos/lista/<int:pedido_id>', lista_productos, name='lista_productos'),                                           #Registrar
     
     path('pedidos/editar/<int:pedido_id>', detalle_pedido, name='detalle_pedido'),                      #Cargar Datos
     path('pedidos/editar/guardar/<int:pedido_id>', editar_pedido, name='editar_pedido'),                #Actualizar

@@ -42,6 +42,9 @@ def pedidos2(request, cliente_id):
         return HttpResponse("No tienes acceso a esta cuenta")
     
     pedidos = Pedido.objects.filter(cliente=cliente)
+
+    print(pedidos)
+    
     contenido = {
         'cliente': cliente,
         'pedidos': pedidos
@@ -545,6 +548,33 @@ def productos_lista(request, pedido_id):
     }
     
     return render(request, 'pedidos/listado-productos.html', contenido)
+
+# @staff_member_required
+def lista_productos(request, pedido_id):
+    # Obtener el objeto Detalle usando el pedido_id
+    producto = get_object_or_404(Detalle, pedido_id=pedido_id)
+
+    print(f'asdasdasdads {producto}')
+
+    # Obtener el ID de la tabla Detalle
+    id_detalle = producto.id
+
+    print(f'id_detalle {id_detalle}')
+
+    # Obtener la lista de personalizaciones relacionadas con el producto
+    personalizaciones = Personalizacion.objects.filter(detalle_id=id_detalle)
+
+    print(f'personalizaciones {personalizaciones}')
+
+    print(f'request.cliente {request.cliente}')
+    
+    contenido = {
+        'producto': producto,
+        'personalizaciones': personalizaciones,
+        'cliente': request.cliente
+    }
+    return render(request, 'pedidos/productos-lista.html', contenido)
+
 
 def agregar_pedido(request, pedido_id, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)

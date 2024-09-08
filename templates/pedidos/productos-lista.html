@@ -1,0 +1,46 @@
+{% extends 'menu.html' %}
+
+{% block title %}Detalles Cariño: {{producto.nombre}} {% endblock %}
+
+{% block content %}
+
+<!-- Info productos  -->
+<div class="info-producto">
+    <h1>{{ producto.nombre }}</h1> {{request.COOKIES.pedido_id}}
+
+    <div class="producto-contenido">
+        <!-- Imagen -->
+        <div class="img">
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+        </div>
+
+        <!-- Detalles -->
+        <div class="info">
+            <h5>Items Incluidos:</h5>
+            <table>
+                {% if personalizaciones %}
+                    {% for personalizacion in personalizaciones %}
+                    <tr>
+                        <td>
+                            <i class="fas fa-check"></i> {{ personalizacion.nombre }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>
+                            <i class="fas fa-exclamation-triangle"></i> Aún no has agregado los elementos principales del producto.
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    <div class="text-center">
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-primary" href="{% url 'pedidos2' cliente.id %}"><i class="fa-solid fa-save"></i> Regresar al listado</a>
+        </div>
+    </div>  
+</div>
+
+{% endblock %}
