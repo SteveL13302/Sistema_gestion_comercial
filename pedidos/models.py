@@ -62,32 +62,58 @@ class Destinatario(models.Model):
         return f"{self.nombre}, {self.direccion}"
 
 class Pago(models.Model):
-    OPC_METODO = [("transferencia", "Transferencia"),("deposito", "Deposito")]
-    OPC_ESTADO_PAGO = [("pagado", "Pagado"),("validando", "Validando")]
+    OPC_METODO = [("transferencia", "Transferencia"), ("deposito", "Deposito")]
+    OPC_ESTADO_PAGO = [("Pagado", "Pagado"), ("Validando", "Validando")]
 
     metodo = models.CharField(max_length=50, choices=OPC_METODO)
-    estado = models.CharField(max_length=50, choices=OPC_ESTADO_PAGO, default="validadando")
-    comprobante = models.ImageField(upload_to='comprobantes/', default='comprobantes/comprobante-default.jpg',  null=True, blank=True)       #Cambiar que se puede enviar vacio
+    estado = models.CharField(max_length=50, choices=OPC_ESTADO_PAGO, default="Validando")
+    comprobante = models.ImageField(upload_to='comprobantes/', default='comprobantes/comprobante-default.jpg', null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.estado}"
 
+    def save(self, *args, **kwargs):
+        # Si el estado ha cambiado a 'pagado'
+        if self.pk and self.estado == "Pagado":
+            # Buscar el pedido asociado a este pago
+            pedido = Pedido.objects.filter(pago=self).first()
+            if pedido and pedido.estado == "En verificacion":
+                # Actualizar el estado del pedido a 'En desarrollo'
+                pedido.estado = "Desarrollando"
+                pedido.save()
+
+        super(Pago, self).save(*args, **kwargs)
+
 class Pedido(models.Model):
-    OPC_ESTADO_PEDIDO = [("carrito", "Carrito"),("enviado", "Enviado"),("entregado", "Entregado")]
+    OPC_ESTADO_PEDIDO = [
+        ("Carrito", "Carrito"),
+        ("En verificacion", "En verificacion"),
+        ("Desarrollando", "En desarrollo"),
+        ("Enviado", "Enviado"),
+        ("Entregado", "Entregado"),
+        ("Cancelado", "Cancelado")
+    ]
     
-    estado = models.CharField(max_length=15, choices=OPC_ESTADO_PEDIDO, default="carrito")
+    estado = models.CharField(max_length=15, choices=OPC_ESTADO_PEDIDO, default="Carrito")
     fecha = models.DateTimeField(auto_now_add=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="clientes", null=True, blank=True)
     pago = models.ForeignKey(Pago, on_delete=models.CASCADE, related_name="pagos", null=True, blank=True)
     destinatario = models.ForeignKey(Destinatario, on_delete=models.CASCADE, related_name="destinatarios", null=True, blank=True)
 
-    # TODO: Verificar si la funcion calcular total se va a ocupar aqui???????????????????????????????????
     def calcular_total(self):
         return sum([detalle.total for detalle in self.detalles.all()])
 
     def __str__(self) -> str:
-        #return f"{self.id}, Total: {self.calcular_total()}"
         return f"{self.id}, {self.cliente}, {self.destinatario}"
+
+    def save(self, *args, **kwargs):
+        # Verifica si el pedido ya tiene un pago asignado
+        if self.pago and self.estado == "Carrito":
+            # Actualiza el estado del pedido a "verificando"
+            self.estado = "En verificacion"
+        
+        # Llama al método save de la superclase
+        super(Pedido, self).save(*args, **kwargs)
 
 class Detalle(models.Model):
     nombre = models.CharField(max_length=50)
