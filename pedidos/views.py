@@ -333,7 +333,7 @@ def destinatarios(request):
     }
     return render(request, 'destinatarios/listado.html', contenido)
 
-def nuevo_destinatario(request, pedido_id):
+def nuevo_destinatario(request, pedido_id=None):
     mensaje_error = ""
     
     if request.method == "POST":
@@ -474,17 +474,43 @@ def editar_pago(request, pago_id):
     
     return render(request, 'pagos/editar.html', contenido_final)
 
+def actualizar_estado_pago(request, pago_id):
+    print(pago_id)
+    pago = get_object_or_404(Pago, id=pago_id)
+    print(pago)
+
+    # Solo cambia el estado si es 'validando'
+    if pago.estado == 'validadando':
+        pago.estado = 'pagado'
+        pago.save()
+
+    return redirect('pagos')
+
 # Pedido
 @staff_member_required
 def pedidos(request):
+    estado_pedido = request.GET.get('estado_pedido', '')
+    estado_pago = request.GET.get('estado_pago', '')
+    
+    print(f"Estado del Pedido: {estado_pedido}")
+    print(f"Estado del Pago: {estado_pago}")
+
     pedidos = Pedido.objects.all()
+    if estado_pedido:
+        pedidos = pedidos.filter(estado=estado_pedido)
+    if estado_pago:
+        pedidos = pedidos.filter(pago__estado=estado_pago)
+
     productos = Producto.objects.all()
+    categorias = Producto.objects.values_list('categoria', flat=True).distinct()
 
     contenido = {
         'pedidos': pedidos,
-        'cliente': request.cliente,  # Llama al cliente del middleware
         'productos': productos,
+        'categorias': categorias,
+        'cliente': request.cliente
     }
+
     return render(request, 'pedidos/listado.html', contenido)
 
 def nuevo_pedido(request):
