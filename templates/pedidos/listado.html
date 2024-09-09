@@ -15,19 +15,15 @@
     
     <!-- Filtro de Estado del Pedido y del Pago -->
     <div id="filtro">
-      <p style="padding-top: 8px; font-size: 20px;">Filtrar por estado:</p>
+      <p style="padding-top: 8px; font-size: 20px;">Filtrar por:</p>
       <button class="boton-categoria filtro-categoria activo" data-estado-pedido="">Todos</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pedido="Carrito">Carrito</button>
       <button class="boton-categoria filtro-categoria" data-estado-pedido="En verificacion">Verificando Pago</button>
       <button class="boton-categoria filtro-categoria" data-estado-pedido="Desarrollando">En Desarrollo</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="Listo">Listo</button>
       <button class="boton-categoria filtro-categoria" data-estado-pedido="Enviado">Enviado</button>
       <button class="boton-categoria filtro-categoria" data-estado-pedido="Entregado">Entregado</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pedido="Cancelado">Entregado</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="Cancelado">Cancelado</button>
       <br>
-      <p style="padding-top: 8px; font-size: 20px;">Filtrar por pago:</p>
-      <button class="boton-categoria filtro-categoria activo" data-estado-pago="">Todos</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pago="Pagado">Pagado</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pago="Validando">Por Validar</button>
     </div>  
 
     <!-- Tabla de Pedidos -->
@@ -106,24 +102,6 @@
                 // Actualizar la URL con el parámetro estado_pedido
                 const url = new URL(window.location.href);
                 url.searchParams.set('estado_pedido', estadoPedido);
-                window.location.href = url.toString();
-            });
-        });
-
-        // Manejar los filtros de estado del pago
-        const filtrosPago = document.querySelectorAll('.filtro-categoria[data-estado-pago]');
-        filtrosPago.forEach(boton => {
-            boton.addEventListener('click', () => {
-                // Remover la clase 'activo' de todos los botones y agregarla al botón seleccionado
-                filtrosPago.forEach(btn => btn.classList.remove('activo'));
-                boton.classList.add('activo');
-
-                // Obtener el valor del filtro seleccionado
-                const estadoPago = boton.getAttribute('data-estado-pago');
-
-                // Actualizar la URL con el parámetro estado_pago
-                const url = new URL(window.location.href);
-                url.searchParams.set('estado_pago', estadoPago);
                 window.location.href = url.toString();
             });
         });

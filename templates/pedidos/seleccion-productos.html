@@ -46,13 +46,13 @@
 </div>
 
 <!-- Tabla de productos (simplificada) -->
-<h2 class="m-4 mb-4 text-center">Items Agregados</h2>
-<h3 class="mt-4">Total Seleccionado: <span id="totalSeleccionado">0.00</span></h3>
-
+<h3 class="mt-4 text-center" style="font-weight: bold;color: #ec9813;">Items</h3>
+<p style="text-align: center;">Selecciona los items para agregar al pedido</p>
+    
 <form id="agregarPedidoForm" method="post" action="{% url 'agregar_pedido_items' pedido_id producto.id %}">
     {% csrf_token %}
     
-    <h3>Selecciona los items para agregar al pedido:</h3>
+    
     <table class="table">
         <thead>
             <tr>
@@ -74,7 +74,7 @@
                 <td class="Precio" data-label="Precio">{{ item.precio }}</td>
                 <td data-label="Tipo">{{ item.tipo }}</td>
                 <td>
-                    <input type="number" name="cantidad_{{ item.id }}" value="1" min="1" class="form-control cantidad" data-precio="{{ item.precio }}">
+                    <input type="number" name="cantidad_{{ item.id }}" value="1" min="1"  max="2" class="form-control cantidad" data-precio="{{ item.precio }}">
                 </td>
                 <td data-label="Total - Item(s)">
                     <span class="total-item" data-precio="{{ item.precio }}" data-cantidad="1">{{ item.precio|floatformat:2 }}</span>
@@ -89,7 +89,10 @@
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-primary">Agregar al Pedido</button>
+    <h3 class="mt-4"><strong>Total :</strong> $<span id="totalSeleccionado">0.00</span></h3>
+    <p style=" font-size: 19px; font-weight: bold; color: #ec9813"><i class="fas fa-exclamation-triangle"></i> No incluye precio de envío</p>
+
+    <button type="submit" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Agregar al Pedido</button>
 </form>
 
 

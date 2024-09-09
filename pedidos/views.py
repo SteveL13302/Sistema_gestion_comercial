@@ -43,6 +43,9 @@ def pedidos2(request, cliente_id):
     
     pedidos = Pedido.objects.filter(cliente=cliente)
 
+    # Excluir pedidos con estado "cancelado"
+    pedidos = pedidos.exclude(estado='Cancelado')
+    
     print(pedidos)
 
     contenido = {
@@ -501,6 +504,10 @@ def pedidos(request):
     print(f"Estado del Pago: {estado_pago}")
 
     pedidos = Pedido.objects.all()
+
+    # Excluir pedidos con estado "Carrito"
+    pedidos = pedidos.exclude(estado='Carrito')
+
     if estado_pedido:
         pedidos = pedidos.filter(estado=estado_pedido)
     if estado_pago:
@@ -706,19 +713,24 @@ def pedido_destinatario_guardar(request, pedido_id):
     return redirect('pedidos2', request.cliente.id)
 
 def pedido_destinatario_editar_guardar(request, pedido_id):
-    destinatarios = Destinatario.objects.filter(user_id=request.user.id)
-    
-    formulario = DestinatarioPedidoForm()
-    formulario.fields['destinatario'].queryset = destinatarios
-    formulario_destinatario = DestinatarioForm()
+    pedido = get_object_or_404(Pedido, id=pedido_id)
 
+    print ("Holaaaa")
+    if request.method == 'POST':
+        form = DestinatarioPedidoForm(request.POST, instance=pedido)
+        if form.is_valid():
+            form.save()
+            return redirect('pedidos2', request.cliente.id)
+    else:
+        form = DestinatarioPedidoForm(instance=pedido)
+    print ("Holaaaa 2")
+    # Combina el contexto del formulario con el cliente y el pedido_id
     contenido_final = {
-        'formulario': formulario,
-        'formulario_destinatario': formulario_destinatario,
-        'cliente': request.cliente,
-        'pedido_id': pedido_id,
+        'formulario': form,
+        'cliente': request.cliente,  # Incluye el cliente del middleware
+        'pedido_id': pedido_id       # Asegúrate de pasar el pedido_id al contexto
     }
-
+    print ("Holaaaa 3")
     return render(request, 'pedidos/destinatario-actualizar.html', contenido_final)
 
 def pedido_destinatario_nuevo(request, pedido_id):
@@ -739,6 +751,7 @@ def pedido_destinatario_nuevo(request, pedido_id):
     return render(request, 'pedidos/destinatario.html', contenido_final)
 
 def pedido_pago_cargar(request, pedido_id):
+    personalizacion = Detalle.objects.filter(pedido_id=pedido_id)
     formulario = PagoPedidoForm()
     formulario_pago = PagoForm()
 
@@ -746,19 +759,28 @@ def pedido_pago_cargar(request, pedido_id):
         'formulario': formulario,
         'formulario_pago': formulario_pago,
         'pedido_id': pedido_id,
-        'cliente': request.cliente 
+        'cliente': request.cliente,
+        'personalizacion': personalizacion
     }
     return render(request, 'pedidos/pago.html', contenido_final)
 
-def eliminar_pedido(request, pedido_id):
+def cancelar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     
-    if request.method == 'POST':
-        pedido.delete()  # Elimina el pedido
-        return redirect('pedidos') 
+    # Solo cambia el estado si es 'Carrito'
+    if pedido.estado == 'Carrito':
+        pedido.estado = 'Cancelado'
+        pedido.save()
 
-    # Si no es una solicitud POST, puedes redirigir o mostrar un error
-    return HttpResponse("Método no permitido", status=405)
+    # Obtener el id del cliente asociado al pedido
+    cliente_id = pedido.cliente.id if pedido.cliente else None
+    
+    # Redirige a la vista 'pedidos2' con el id del cliente
+    if cliente_id:
+        return redirect(reverse('pedidos2', kwargs={'cliente_id': cliente_id}))
+    else:
+        # Manejar el caso en que el pedido no tiene cliente asociado
+        return redirect('pedidos2')  
 
 def detalle_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
@@ -782,12 +804,47 @@ def editar_pedido_estado(request, pedido_id):
             estado_seleccionado = form.cleaned_data['estado']
             print(f"Estado seleccionado: {estado_seleccionado}")
 
-            if estado_seleccionado == "Carrito":
-                mensaje_estado = "Tu pedido está en el Carrito. Estamos trabajando en su preparación."
-            elif estado_seleccionado == "enviado":
-                mensaje_estado = "Tu pedido está Enviado. Pronto estará listo para ser enviado."
-            elif estado_seleccionado == "entregado":
-                mensaje_estado = "Tu pedido ha sido Entregado. Gracias por confiar en nosotros."
+            if estado_seleccionado == "En verificacion":
+                mensaje_estado = (
+                    "Estimado cliente,\n\n"
+                    "Estamos en proceso de verificar el pago de tu pedido. Tan pronto como la verificación esté completa, "
+                    "empezaremos a prepararlo para su envío o recogida.\n\n"
+                    "Gracias por tu paciencia."
+                )
+            elif estado_seleccionado == "Desarrollando":
+                mensaje_estado = (
+                    "Estimado cliente,\n\n"
+                    "Tu pago ha sido validado con éxito y estamos trabajando en tu pedido. "
+                    "Pronto estará listo para ser recogido en nuestra tienda o enviado a la dirección especificada en el pedido.\n\n"
+                    "Agradecemos tu confianza en nosotros."
+                )
+            elif estado_seleccionado == "Listo":
+                mensaje_estado = (
+                    "Estimado cliente,\n\n"
+                    "Nos complace informarte que tu pedido ya está listo para ser retirado y/o enviado.\n\n"
+                    "Gracias por tu compra."
+                )
+            elif estado_seleccionado == "Enviado":
+                mensaje_estado = (
+                    "Estimado cliente,\n\n"
+                    "Nos complace informarte que tu pedido ha sido enviado a la dirección especificada.\n\n"
+                    "Gracias por tu compra."
+                )                
+            elif estado_seleccionado == "Entregado":
+                mensaje_estado = (
+                    "Estimado cliente,\n\n"
+                    "Tu pedido ha sido entregado con éxito. Esperamos que estés satisfecho con tu compra. "
+                    "Si tienes alguna pregunta o necesitas asistencia adicional, no dudes en contactarnos.\n\n"
+                    "Gracias por confiar en nosotros."
+                )
+            elif estado_seleccionado == "Cancelado":
+                mensaje_estado = (
+                    "Estimado cliente,\n\n"
+                    "Lamentamos informarte que tu pedido ha sido cancelado. "
+                    "Si necesitas asistencia para realizar un nuevo pedido o tienes alguna pregunta, por favor contáctanos.\n\n"
+                    "Gracias por tu comprensión."
+                )
+
             else:
                 mensaje_estado = "El estado de tu pedido ha sido actualizado."
 

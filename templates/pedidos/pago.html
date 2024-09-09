@@ -1,12 +1,12 @@
 {% extends 'menu.html' %}
 
-{% block title %}Finalizar Pedido{% endblock %}
+{% block title %}Agregar Pago{% endblock %}
 
 {% block content %}
   <div class="frm_container">
-    <h1>Finalizar Pedido</h1>
-    <hr>
-
+    <h1>Agregar Pago</h1>
+    <p style="text-align: center;">Carga la imagen del comprobante de la transferencia/deposito para realizar tu pedido</p>
+    
     <!-- Formulario principal de Finalizar Pedido -->
     <form method="post" action="{% url 'nuevo_pago' pedido_id %}" enctype="multipart/form-data">
       {% csrf_token %}

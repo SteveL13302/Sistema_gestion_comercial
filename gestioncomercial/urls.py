@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from pedidos.views import pedidos2, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, productos_items, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, eliminar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items, detalle_item, editar_item, pedido_crear, productos_lista, pedido_destinatario_nuevo, pedido_pago_cargar, enviar_correo, pedido_destinatario_guardar, lista_productos, pedido_destinatario_editar_guardar, editar_pedido_estado, actualizar_estado_pago
+from pedidos.views import pedidos2, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, productos_items, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, cancelar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items, detalle_item, editar_item, pedido_crear, productos_lista, pedido_destinatario_nuevo, pedido_pago_cargar, enviar_correo, pedido_destinatario_guardar, lista_productos, pedido_destinatario_editar_guardar, editar_pedido_estado, actualizar_estado_pago
 from django.conf import settings
 from django.views.generic import RedirectView
 from django.conf.urls.static import static
@@ -78,6 +78,8 @@ urlpatterns = [
     path('pedidos/actualizar/<int:pedido_id>', pedido_destinatario_guardar, name='pedido_destinatario_guardar'),           #Actualizar        #Actualizar                     #Agrega Item
     
     path('pedidos/registrar/pago/<int:pedido_id>', pedido_pago_cargar, name='pedido_pago_cargar'),  
+    
+    path('pedidos/cancelar/<int:pedido_id>', cancelar_pedido, name='cancelar_pedido'),  
 
     #Carrito
     #path('anadir_producto_pedido/', anadir_producto_pedido, name='anadir_producto_pedido'),    #Agregar

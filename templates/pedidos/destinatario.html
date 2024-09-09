@@ -1,12 +1,12 @@
 {% extends 'menu.html' %}
 
-{% block title %}Registrar Destinatario{% endblock %}
+{% block title %}Seleccionar Destinatario{% endblock %}
 
 {% block content %}
 <div class="frm_container">
   <h1>Seleccionar Destinatario</h1>
-  <hr>
-
+  <p style="text-align: center;">Selecciona una dirección para el envío de tu pedido</p>
+  
   <!-- Formulario principal de Finalizar Pedido -->
   <form method="post" action="{% url 'pedido_destinatario_guardar' pedido_id %}">
     {% csrf_token %}

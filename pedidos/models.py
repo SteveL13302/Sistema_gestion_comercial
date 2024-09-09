@@ -89,6 +89,7 @@ class Pedido(models.Model):
         ("Carrito", "Carrito"),
         ("En verificacion", "En verificacion"),
         ("Desarrollando", "En desarrollo"),
+        ("Listo", "Listo"),
         ("Enviado", "Enviado"),
         ("Entregado", "Entregado"),
         ("Cancelado", "Cancelado")

@@ -8,7 +8,7 @@
   <!-- Historial de pedidos  -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Historial de Pedidos</h2>
-    <a href="{% url 'pedido_crear' %}" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> Nuevo Pedido</a>
+    <a href="{% url 'pedido_crear' %}" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Nuevo Pedido</a>
   </div>
 
   <table class="table">
@@ -19,45 +19,72 @@
         <th scope="col">Estado</th>
         <th scope="col">Destinatario</th>
         <th scope="col">Pago</th>
-        <th scope="col">Detalle </th>
+        <th scope="col">Acciones </th>
       </tr>
     </thead>
     <tbody>
       {% for pedido in pedidos %}
       <tr>
         <th scope="row" data-label="#">{{ forloop.counter }}</th>
-        <!-- <th scope="row" data-label="#">{{ pedido.id }}</a></th> -->
-        <td data-label="Fecha:">{{ pedido.fecha }}</td>
-
-        <td data-label="Estado:"> {{pedido.estado }} </td>
-
-        <td data-label="Destinatario:">
-          {% if pedido.destinatario %}
-          {{ pedido.destinatario.nombre }}
+        
+        <td data-label="Fecha:">
+          {% if pedido.estado == "Cancelado" %}
+            <i class="fas fa-exclamation-triangle"></i> No Disponible
           {% else %}
-          <a class="btn btn-info mt-3" href="{% url 'pedido_destinatario_editar_guardar' pedido.id %}">
-            <i class="fa-solid fa-map-marker-alt"></i> Agregar Destinatario
-          </a>
+            {{ pedido.fecha }}
           {% endif %}
         </td>
         
-        <td data-label="Pago:">
-          {% if pedido.pago.estado %}
-            {% if pedido.pago.estado == "validando" %}
-              {{ pedido.pago.estado }}
-            {% elif pedido.pago.estado == "pagado" %}
-              {{ pedido.pago.estado }} - <a href="{{ pedido.pago.comprobante.url }}" target="_blank">Ver Comprobante</a>
-            {% else %}
-              {{ pedido.pago.estado }}
-            {% endif %}
+        <td data-label="Estado:"> {{pedido.estado }} </td>
+
+        <td data-label="Destinatario:">
+          {% if pedido.estado == "Cancelado" %}
+            <i class="fas fa-exclamation-triangle"></i> No Disponible
           {% else %}
-          <a class="btn btn-primary" href="{% url 'pedido_pago_cargar' pedido.id %}"> <i class="fa-solid fa-dollar-sign"></i> Agregar Pago </a>
+            {% if pedido.destinatario %}
+              {{ pedido.destinatario.nombre }}
+            {% else %}
+              <a class="btn btn-primary" style="background-color: #ffefdf; color: #a0682f;"
+                href="{% url 'pedido_destinatario_editar_guardar' pedido.id %}">
+                <i class="fa-solid fa-map-marker-alt"></i> Agregar Destinatario
+              </a>
+            {% endif %}
+          {% endif %}
+        </td>        
+
+        <td data-label="Pago:">
+          {% if pedido.estado == "Cancelado" %}
+            <i class="fas fa-exclamation-triangle"></i> No Disponible
+          {% else %}
+            {% if pedido.pago.estado %}
+              {% if pedido.pago.estado == "Validando" %}
+                {{ pedido.pago.estado }}
+              {% elif pedido.pago.estado == "Pagado" %}
+                {{ pedido.pago.estado }} - <a href="{{ pedido.pago.comprobante.url }}" target="_blank">Ver Comprobante</a>
+              {% else %}
+                {{ pedido.pago.estado }}
+              {% endif %}
+            {% else %}
+              <a class="btn btn-primary" style="background-color: #e5a744;" href="{% url 'pedido_pago_cargar' pedido.id %}">
+                <i class="fa-solid fa-dollar-sign"></i> Agregar Pago
+              </a>
+            {% endif %}
           {% endif %}
         </td>
 
         <td data-label="Detalle:">
-          <a class="btn btn-primary" style="background-color:#871f23 ;" href="{% url 'lista_productos' pedido.id %}"><i class="fa-solid fa-gift"></i> Ver Detalle</a>
-        </td> <!-- rediccionar a el detalle del pedido  -->
+          {% if pedido.estado == "Cancelado" %}
+          <i class="fas fa-exclamation-triangle"></i> Pedido Cancelado
+          {% else %}
+          <a class="btn btn-primary" style="background-color: #0c95aa;" href="{% url 'lista_productos' pedido.id %}"><i
+              class="fa-solid fa-gift"></i> Ver Detalle</a>
+            {% if pedido.estado == "Carrito" %}
+            <a class="btn btn-primary" style="background-color:#871f23 ;" href="{% url 'cancelar_pedido' pedido.id %}"><i
+                class="fa-solid fa-trash"></i> Cancelar Pedido</a>
+            {% endif %}
+          {% endif %}
+        </td>
+
       </tr>
       {% endfor %}
     </tbody>

@@ -76,16 +76,16 @@ DATABASES = {
 }
 
 # BASE SERVIDOR
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stevenxev$detallesca',
-        'USER': 'stevenxev',
-        'PASSWORD': 'detalles039-CA',
-        'HOST': 'stevenxev.mysql.pythonanywhere-services.com',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'stevenxev$detallesca',
+#         'USER': 'stevenxev',
+#         'PASSWORD': 'detalles039-CA',
+#         'HOST': 'stevenxev.mysql.pythonanywhere-services.com',
+#         'PORT': '3306',
+#     }
+# }
 
 # BASE LOCAL
 # DATABASES = {
