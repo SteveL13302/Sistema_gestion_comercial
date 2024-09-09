@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from pedidos.views import pedidos2, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, productos_items, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, eliminar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items, detalle_item, editar_item, pedido_crear, productos_lista, pedido_destinatario_nuevo, pedido_pago_cargar, enviar_correo, pedido_destinatario_guardar, lista_productos
+from pedidos.views import pedidos2, main, clientes, nuevo_cliente, detalle_cliente, editar_cliente, nuevo_producto, productos, eliminar_producto, detalle_producto, editar_producto, nuevo_destinatario, destinatarios, eliminar_destinatario, detalle_destinatario, editar_destinatario, productos_items, nuevo_item, eliminar_item, nuevo_pago, pagos, eliminar_pago, detalle_pago, editar_pago, pedidos, nuevo_pedido, eliminar_pedido, detalle_pedido, editar_pedido, agregar_pedido, agregar_pedido_items, detalle_item, editar_item, pedido_crear, productos_lista, pedido_destinatario_nuevo, pedido_pago_cargar, enviar_correo, pedido_destinatario_guardar, lista_productos, pedido_destinatario_editar_guardar, editar_pedido_estado, actualizar_estado_pago
 from django.conf import settings
 from django.views.generic import RedirectView
 from django.conf.urls.static import static
@@ -54,6 +54,7 @@ urlpatterns = [
     path('pagos/eliminar/<int:pago_id>', eliminar_pago, name='eliminar_pago'),              #Eliminar
     path('pagos/editar/<int:pago_id>', detalle_pago, name='detalle_pago'),                  #Cargar Datos
     path('pagos/editar/guardar/<int:pago_id>', editar_pago, name='editar_pago'),            #Actualizar
+    path('pagos/validar/<int:pago_id>/', actualizar_estado_pago, name='actualizar_estado_pago'),
 
     #Pedido
     path('cliente/pedidos/<int:cliente_id>', pedidos2, name='pedidos2'),                                #Pedidos - Cliente en especifico
@@ -62,17 +63,19 @@ urlpatterns = [
     path('pedidos/nuevo', nuevo_pedido, name='nuevo_pedido'),                                           #Registrar
     path('pedidos/crear', pedido_crear, name='pedido_crear'),                                           #Registrar
     
-    path('pedidos/listado/productos/<int:pedido_id>', productos_lista, name='productos_lista'),                                           #Registrar
-    path('pedidos/productos/lista/<int:pedido_id>', lista_productos, name='lista_productos'),                                           #Registrar
+    path('pedidos/listado/productos/<int:pedido_id>', productos_lista, name='productos_lista'),         #Registrar
+    path('pedidos/productos/lista/<int:pedido_id>', lista_productos, name='lista_productos'),           #Registrar
     
     path('pedidos/editar/<int:pedido_id>', detalle_pedido, name='detalle_pedido'),                      #Cargar Datos
     path('pedidos/editar/guardar/<int:pedido_id>', editar_pedido, name='editar_pedido'),                #Actualizar
+    path('pedidos/editar/estado/<int:pedido_id>', editar_pedido_estado, name='editar_pedido_estado'),                #Actualizar
     
     path('pedidos/agregar/<int:pedido_id>/<int:producto_id>', agregar_pedido, name='agregar_pedido'),   #Agrega Producto
     path('pedidos/registrar/<int:pedido_id>/<int:producto_id>', agregar_pedido_items, name='agregar_pedido_items'),                       #Agrega Item
     
     path('pedidos/registrar/destinatario/<int:pedido_id>', pedido_destinatario_nuevo, name='pedido_destinatario_nuevo'),  
-    path('pedidos/actualizar/<int:pedido_id>', pedido_destinatario_guardar, name='pedido_destinatario_guardar'),           #Actualizar                     #Agrega Item
+    path('pedidos/actualizar/destinatario/<int:pedido_id>', pedido_destinatario_editar_guardar, name='pedido_destinatario_editar_guardar'),  
+    path('pedidos/actualizar/<int:pedido_id>', pedido_destinatario_guardar, name='pedido_destinatario_guardar'),           #Actualizar        #Actualizar                     #Agrega Item
     
     path('pedidos/registrar/pago/<int:pedido_id>', pedido_pago_cargar, name='pedido_pago_cargar'),  
 
