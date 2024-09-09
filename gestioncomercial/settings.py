@@ -75,6 +75,19 @@ DATABASES = {
     }
 }
 
+# BASE SERVIDOR
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'stevenxev$detallesca',
+#         'USER': 'stevenxev',
+#         'PASSWORD': 'detalles039-CA',
+#         'HOST': 'stevenxev.mysql.pythonanywhere-services.com',
+#         'PORT': '3306',
+#     }
+# }
+
+# BASE LOCAL
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.mysql",
@@ -85,7 +98,6 @@ DATABASES = {
 #         "PORT": "3306",
 #     }
 # }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
