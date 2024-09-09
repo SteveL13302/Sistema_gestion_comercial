@@ -14,7 +14,7 @@ class Cliente(models.Model):
         db_table = 'cliente' 
     
     def __str__(self) -> str:
-        return f"{self.nombre}, {self.cedula}, {self.id}"
+        return f"{self.nombre}, {self.cedula}, {self.id}, {self.email}"
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=50)
@@ -24,7 +24,7 @@ class Producto(models.Model):
     precio_base = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
 
     def calcular_precio_base(self):
-        self.precio_base = sum(item.precio for item in self.items.filter(tipo='base'))  
+        self.precio_base = sum(item.precio for item in self.items.filter(tipo='principal'))  
     
     def save(self, *args, **kwargs):
         if self.pk:  # Si el producto ya tiene un ID
@@ -97,7 +97,7 @@ class Detalle(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name="pedidos", blank=True, null=True)
     
     def calcular_precio(self):
-        self.precio = sum(personalizacion.total for personalizacion in self.personalizaciones.filter(tipo='base'))  
+        self.precio = sum(personalizacion.total for personalizacion in self.personalizaciones.filter(tipo='principal'))  
     
     def save(self, *args, **kwargs):
         if self.pk:  # Si el producto ya tiene un ID

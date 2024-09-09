@@ -8,7 +8,7 @@ from django.conf import settings
 from django.http import Http404
 
 from .models import Cliente, Producto, Pedido, Detalle, Item, Destinatario, Pago, Personalizacion
-from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioPedidoForm, DestinatarioForm, PagoForm, PedidoForm, EmailForm, PagoPedidoForm
+from .forms import ClienteForm, DetalleForm, ProductoForm, ItemForm, DestinatarioPedidoForm, DestinatarioForm, PagoForm, PedidoForm, EmailForm, PagoPedidoForm, EstadoPedidoForm
 
 # MENU      
 # def menu(request): 
@@ -44,7 +44,7 @@ def pedidos2(request, cliente_id):
     pedidos = Pedido.objects.filter(cliente=cliente)
 
     print(pedidos)
-    
+
     contenido = {
         'cliente': cliente,
         'pedidos': pedidos
@@ -578,7 +578,7 @@ def lista_productos(request, pedido_id):
 
 def agregar_pedido(request, pedido_id, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
-    personalizaciones = producto.items.filter(tipo='base')
+    personalizaciones = producto.items.filter(tipo='principal')
     items = Item.objects.filter(producto=producto)
 
     # Creamos una instancia del formulario, pero no lo procesamos aquí
@@ -662,7 +662,7 @@ def pedido_destinatario_guardar(request, pedido_id):
         form = DestinatarioPedidoForm(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
-            return redirect('pedido_pago_cargar', pedido_id)
+            return redirect('pedidos2', request.cliente.id)
     else:
         form = DestinatarioPedidoForm(instance=pedido)
 
@@ -673,7 +673,24 @@ def pedido_destinatario_guardar(request, pedido_id):
         'pedido_id': pedido_id       # Asegúrate de pasar el pedido_id al contexto
     }
     
-    return render(request, 'pedidos/pago.html', contenido_final)
+    return redirect('pedidos2', request.cliente.id)
+
+def pedido_destinatario_editar_guardar(request, pedido_id):
+    destinatarios = Destinatario.objects.filter(user_id=request.user.id)
+    print(destinatarios)  # Agrega esta línea para verificar el queryset
+
+    formulario = DestinatarioPedidoForm()
+    formulario.fields['destinatario'].queryset = destinatarios
+    formulario_destinatario = DestinatarioForm()
+
+    contenido_final = {
+        'formulario': formulario,
+        'formulario_destinatario': formulario_destinatario,
+        'cliente': request.cliente,
+        'pedido_id': pedido_id,
+    }
+
+    return render(request, 'pedidos/destinatario-actualizar.html', contenido_final)
 
 def pedido_destinatario_nuevo(request, pedido_id):
     destinatarios = Destinatario.objects.filter(user_id=request.user.id)
@@ -691,6 +708,7 @@ def pedido_destinatario_nuevo(request, pedido_id):
     }
 
     return render(request, 'pedidos/destinatario.html', contenido_final)
+
 
 def pedido_pago_cargar(request, pedido_id):
     formulario = PagoPedidoForm()
@@ -716,7 +734,7 @@ def eliminar_pedido(request, pedido_id):
 
 def detalle_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
-    formulario = PedidoForm(instance=pedido)  # Cargar el formulario con los datos del pedido
+    formulario = EstadoPedidoForm(instance=pedido)  # Cargar el formulario con los datos del pedido
     contenido = {
         'formulario': formulario, 
         'pedido': pedido,
@@ -725,6 +743,58 @@ def detalle_pedido(request, pedido_id):
 
     return render(request, 'pedidos/editar.html', contenido)
 
+def editar_pedido_estado(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    
+    if request.method == 'POST':
+        form = EstadoPedidoForm(request.POST, instance=pedido)
+        if form.is_valid():
+            form.save()
+
+            estado_seleccionado = form.cleaned_data['estado']
+            print(f"Estado seleccionado: {estado_seleccionado}")
+
+            if estado_seleccionado == "carrito":
+                mensaje_estado = "Tu pedido está en el Carrito. Estamos trabajando en su preparación."
+            elif estado_seleccionado == "enviado":
+                mensaje_estado = "Tu pedido está Enviado. Pronto estará listo para ser enviado."
+            elif estado_seleccionado == "entregado":
+                mensaje_estado = "Tu pedido ha sido Entregado. Gracias por confiar en nosotros."
+            else:
+                mensaje_estado = "El estado de tu pedido ha sido actualizado."
+
+            destinatarios_qs = Cliente.objects.filter(user_id=request.user.id).values_list('email', flat=True)
+
+            # Convirtiendo la QuerySet a una lista
+            destinatarios = list(destinatarios_qs)
+
+            print(destinatarios)
+
+            destinatario = destinatarios
+            asunto = "ACTUALIZACION ESTADO PEDIDO"
+            mensaje = mensaje_estado
+
+            # Configurar el envío del correo
+            send_mail(
+                asunto,  # Asunto del correo
+                mensaje,  # Mensaje
+                settings.EMAIL_HOST_USER,  # Remitente
+                destinatarios,  # Destinatario proporcionado por el usuario
+                fail_silently=False,
+            )
+
+            return redirect('pedidos') 
+    else:
+        form = EstadoPedidoForm(instance=pedido)
+
+    # Combina el contexto del formulario con el cliente
+    contenido_final = {
+        'formulario': form,
+        'cliente': request.cliente  # Incluye el cliente del middleware
+    }
+    
+    return render(request, 'pedidos/editar.html', contenido_final)
+
 def editar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     
@@ -732,7 +802,7 @@ def editar_pedido(request, pedido_id):
         form = PedidoForm(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
-            return redirect('pedidos')  # Redirige a la lista de pedidos después de guardar
+            return redirect('pedidos') 
     else:
         form = PedidoForm(instance=pedido)
 
@@ -743,7 +813,6 @@ def editar_pedido(request, pedido_id):
     }
     
     return render(request, 'pedidos/editar.html', contenido_final)
-
 
 
 # DETALLE      

@@ -8,7 +8,7 @@
     <h1>Actualizar Pedido</h1>
     <hr>
 
-    <form method="post" action="{% url 'editar_pedido' pedido.id %}">
+    <form method="post" action="{% url 'editar_pedido_estado' pedido.id %}">
       {% csrf_token %}
       {{ formulario.as_p }}
       <input type="submit" value="Guardar" class="btn btn-primary">

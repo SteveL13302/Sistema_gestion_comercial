@@ -96,8 +96,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const totalSeleccionadoSpan = document.getElementById('totalSeleccionado');
-    const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
     const itemChecks = document.querySelectorAll('.item-check');
+    const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
 
     function updateTotal() {
         let total = 0;
@@ -109,10 +109,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cantidadInput = document.querySelector(`input[name="cantidad_${itemId}"]`);
                 const cantidad = parseInt(cantidadInput.value, 10);
 
-                // Actualizar el total del item
-                const totalItemSpan = document.querySelector(`.total-item[data-precio="${precio}"]`);
-                if (totalItemSpan) {
-                    totalItemSpan.textContent = (precio * cantidad).toFixed(2);
+                // Actualizar el total del item en la tabla
+                const totalItemTd = check.closest('tr').querySelector('.total-item');
+                if (totalItemTd) {
+                    totalItemTd.textContent = (precio * cantidad).toFixed(2);
                 }
 
                 // Acumulación del total
@@ -135,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicializar el total al cargar la página
     updateTotal();
 });
-
 </script>
 
 

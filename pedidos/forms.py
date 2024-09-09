@@ -115,6 +115,14 @@ class DetalleForm(forms.ModelForm):
             'precio': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 0.00'}),    #Gestionar para que calcule en base al modelo
         }
 
+class EstadoPedidoForm(forms.ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ['estado']
+        widgets = {
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+        }
+
 class PersonalizacionForm(forms.ModelForm):
     class Meta:
         model = Personalizacion

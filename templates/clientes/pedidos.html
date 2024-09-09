@@ -3,38 +3,64 @@
 {% block title %}Pedidos{% endblock %}
 
 {% block content %}
-  <div class="info-cliente">
+<div class="info-cliente">
 
-    <!-- Historial de pedidos  -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2>Historial de Pedidos</h2>
-      <a href="{% url 'pedido_crear' %}" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> Nuevo Pedido</a>
-    </div>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Destinatario</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Detalle </th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for pedido in pedidos %}
-        <tr>
-          <th scope="row" data-label="#">{{ forloop.counter }}</th>
-          <!-- <th scope="row" data-label="#">{{ pedido.id }}</a></th> -->
-          <td data-label="Fecha:">{{ pedido.fecha }}</td>
-          <td data-label="Destinatario:">{{ pedido.destinatario.nombre }}</td>
-          <td data-label="Estado:">{{ pedido.estado }}</td>
-          <td data-label="Detalle:">
-            <a class="btn btn-primary" href="{% url 'lista_productos' pedido.id %}"><i class="fa-solid fa-save"></i> Ver Detalle</a>
-          </td> <!-- rediccionar a el detalle del pedido  -->
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <!-- Historial de pedidos  -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Historial de Pedidos</h2>
+    <a href="{% url 'pedido_crear' %}" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> Nuevo Pedido</a>
   </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Destinatario</th>
+        <th scope="col">Pago</th>
+        <th scope="col">Detalle </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in pedidos %}
+      <tr>
+        <th scope="row" data-label="#">{{ forloop.counter }}</th>
+        <!-- <th scope="row" data-label="#">{{ pedido.id }}</a></th> -->
+        <td data-label="Fecha:">{{ pedido.fecha }}</td>
+
+        <td data-label="Destinatario:">
+          {% if pedido.destinatario %}
+          {{ pedido.destinatario.nombre }}
+          {% else %}
+          <a class="btn btn-secondary" href="{% url 'pedido_destinatario_editar_guardar' pedido.id %}">
+            <i class="fa-solid fa-map-marker-alt"></i> Agregar Destinatario
+          </a>
+          {% endif %}
+        </td>
+
+        <td data-label="Estado:"> {{pedido.estado }} </td>
+
+        <td data-label="Pago:">
+          {% if pedido.pago.estado %}
+            {% if pedido.pago.estado == "validando" %}
+              {{ pedido.pago.estado }}
+            {% elif pedido.pago.estado == "pagado" %}
+              {{ pedido.pago.estado }} - <a href="{{ pedido.pago.comprobante.url }}" target="_blank">Ver Comprobante</a>
+            {% else %}
+              {{ pedido.pago.estado }}
+            {% endif %}
+          {% else %}
+          <a class="btn btn-primary" href="{% url 'pedido_pago_cargar' pedido.id %}"> <i class="fa-solid fa-dollar-sign"></i> Agregar Pago </a>
+          {% endif %}
+        </td>
+
+        <td data-label="Detalle:">
+          <a class="btn btn-primary" href="{% url 'lista_productos' pedido.id %}"><i class="fa-solid fa-gift"></i> Ver Detalle</a>
+        </td> <!-- rediccionar a el detalle del pedido  -->
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
