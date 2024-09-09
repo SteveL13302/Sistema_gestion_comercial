@@ -29,18 +29,18 @@
         <!-- <th scope="row" data-label="#">{{ pedido.id }}</a></th> -->
         <td data-label="Fecha:">{{ pedido.fecha }}</td>
 
+        <td data-label="Estado:"> {{pedido.estado }} </td>
+
         <td data-label="Destinatario:">
           {% if pedido.destinatario %}
           {{ pedido.destinatario.nombre }}
           {% else %}
-          <a class="btn btn-secondary" href="{% url 'pedido_destinatario_editar_guardar' pedido.id %}">
+          <a class="btn btn-info mt-3" href="{% url 'pedido_destinatario_editar_guardar' pedido.id %}">
             <i class="fa-solid fa-map-marker-alt"></i> Agregar Destinatario
           </a>
           {% endif %}
         </td>
-
-        <td data-label="Estado:"> {{pedido.estado }} </td>
-
+        
         <td data-label="Pago:">
           {% if pedido.pago.estado %}
             {% if pedido.pago.estado == "validando" %}
@@ -56,7 +56,7 @@
         </td>
 
         <td data-label="Detalle:">
-          <a class="btn btn-primary" href="{% url 'lista_productos' pedido.id %}"><i class="fa-solid fa-gift"></i> Ver Detalle</a>
+          <a class="btn btn-primary" style="background-color:#871f23 ;" href="{% url 'lista_productos' pedido.id %}"><i class="fa-solid fa-gift"></i> Ver Detalle</a>
         </td> <!-- rediccionar a el detalle del pedido  -->
       </tr>
       {% endfor %}

@@ -17,14 +17,17 @@
     <div id="filtro">
       <p style="padding-top: 8px; font-size: 20px;">Filtrar por estado:</p>
       <button class="boton-categoria filtro-categoria activo" data-estado-pedido="">Todos</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pedido="carrito">Carrito</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pedido="enviado">Enviado</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pedido="entregado">Entregado</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="Carrito">Carrito</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="En verificacion">Verificando Pago</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="Desarrollando">En Desarrollo</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="Enviado">Enviado</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="Entregado">Entregado</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pedido="Cancelado">Entregado</button>
       <br>
       <p style="padding-top: 8px; font-size: 20px;">Filtrar por pago:</p>
       <button class="boton-categoria filtro-categoria activo" data-estado-pago="">Todos</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pago="pagado">Pagado</button>
-      <button class="boton-categoria filtro-categoria" data-estado-pago="validando">Validando</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pago="Pagado">Pagado</button>
+      <button class="boton-categoria filtro-categoria" data-estado-pago="Validando">Por Validar</button>
     </div>  
 
     <!-- Tabla de Pedidos -->
@@ -50,10 +53,10 @@
           
           <td data-label="Pago:">
           {% if pedido.pago.estado %}
-            {% if pedido.pago.estado == "validadando" %}
+            {% if pedido.pago.estado == "Validando" %}
               <a class="btn btn-info btn-sm" style="background-color: #ec9813; color: white;" href="{{ pedido.pago.comprobante.url }}" target="_blank"><i class="fas fa-eye"></i> Ver Comprobante</a> 
-              <a class="btn btn-info btn-sm" style="background-color: #871f23; color: white;" href="{% url 'actualizar_estado_pago' pedido.pago.id %}" target="_blank"><i class="fas fa-check"></i> Validar Pago</a>
-            {% elif pedido.pago.estado == "pagado" %}
+              <a class="btn btn-info btn-sm" style="background-color: #871f23; color: white;" href="{% url 'actualizar_estado_pago' pedido.pago.id %}"><i class="fas fa-check"></i> Validar Pago</a>
+            {% elif pedido.pago.estado == "Pagado" %}
               {{ pedido.pago.estado }}  
             {% else %}
               {{ pedido.pago.estado }}

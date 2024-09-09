@@ -480,11 +480,16 @@ def actualizar_estado_pago(request, pago_id):
     print(pago)
 
     # Solo cambia el estado si es 'validando'
-    if pago.estado == 'validadando':
-        pago.estado = 'pagado'
+    if pago.estado == 'Validando':
+        pago.estado = 'Pagado'
         pago.save()
 
-    return redirect('pagos')
+    contenido = {
+        'cliente': request.user.id
+    }
+
+    return redirect(reverse('pedidos'))
+
 
 # Pedido
 @staff_member_required
@@ -547,9 +552,9 @@ def pedido_crear(request):
     if not cliente_id:
         return HttpResponseRedirect('/')  
     
-    # Crea el pedido con estado "carrito" y el cliente autenticado
+    # Crea el pedido con estado "Carrito" y el cliente autenticado
     pedido = Pedido.objects.create(
-        estado="carrito",
+        estado="Carrito",
         cliente_id=request.cliente.id
     )
 
@@ -600,7 +605,6 @@ def lista_productos(request, pedido_id):
         'cliente': request.cliente
     }
     return render(request, 'pedidos/productos-lista.html', contenido)
-
 
 def agregar_pedido(request, pedido_id, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
@@ -688,7 +692,7 @@ def pedido_destinatario_guardar(request, pedido_id):
         form = DestinatarioPedidoForm(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
-            return redirect('pedidos2', request.cliente.id)
+            return redirect('pedido_pago_cargar', pedido_id)
     else:
         form = DestinatarioPedidoForm(instance=pedido)
 
@@ -703,8 +707,7 @@ def pedido_destinatario_guardar(request, pedido_id):
 
 def pedido_destinatario_editar_guardar(request, pedido_id):
     destinatarios = Destinatario.objects.filter(user_id=request.user.id)
-    print(destinatarios)  # Agrega esta línea para verificar el queryset
-
+    
     formulario = DestinatarioPedidoForm()
     formulario.fields['destinatario'].queryset = destinatarios
     formulario_destinatario = DestinatarioForm()
@@ -734,7 +737,6 @@ def pedido_destinatario_nuevo(request, pedido_id):
     }
 
     return render(request, 'pedidos/destinatario.html', contenido_final)
-
 
 def pedido_pago_cargar(request, pedido_id):
     formulario = PagoPedidoForm()
@@ -780,7 +782,7 @@ def editar_pedido_estado(request, pedido_id):
             estado_seleccionado = form.cleaned_data['estado']
             print(f"Estado seleccionado: {estado_seleccionado}")
 
-            if estado_seleccionado == "carrito":
+            if estado_seleccionado == "Carrito":
                 mensaje_estado = "Tu pedido está en el Carrito. Estamos trabajando en su preparación."
             elif estado_seleccionado == "enviado":
                 mensaje_estado = "Tu pedido está Enviado. Pronto estará listo para ser enviado."
@@ -894,9 +896,9 @@ def pedido_actualizar_destinatario(request):
     if not cliente_id:
         return HttpResponseRedirect('/')  
     
-    # Crea el pedido con estado "carrito" y el cliente autenticado
+    # Crea el pedido con estado "Carrito" y el cliente autenticado
     pedido = Pedido.objects.create(
-        estado="carrito",
+        estado="Carrito",
         cliente_id=request.cliente.id
     )
 
@@ -911,7 +913,7 @@ def pedido_actualizar_destinatario(request):
 #     response = render(request, 'borrador.html', contenido)
     
 #     if pedido_id:
-#         pedido = Pedido.objects.filter(estado_pedido = 'carrito', id = pedido_id).last()
+#         pedido = Pedido.objects.filter(estado_pedido = 'Carrito', id = pedido_id).last()
 #     else:
 #         pedido = None
 

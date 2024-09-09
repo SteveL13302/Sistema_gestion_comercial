@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
             name='Pedido',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('estado', models.CharField(choices=[('carrito', 'Carrito'), ('enviado', 'Enviado'), ('entregado', 'Entregado')], default='carrito', max_length=15)),
+                ('estado', models.CharField(choices=[('Carrito', 'Carrito'), ('enviado', 'Enviado'), ('entregado', 'Entregado')], default='Carrito', max_length=15)),
                 ('fecha', models.DateTimeField(auto_now_add=True)),
                 ('cliente', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='clientes', to='pedidos.cliente')),
                 ('destinatario', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='destinatarios', to='pedidos.destinatario')),
